@@ -43,8 +43,11 @@ qr_mgs_v1.o: qr_mgs_v1.c
 qr_cgs_v1.o: qr_cgs_v1.c
 	$(CC) -c $(CCFLAGS) -o $@ qr_cgs_v1.c
 
-main_qr_gramschmidt.exe: main_qr_gramschmidt.c qr_mgs_v0.o qr_mgs_v1.o qr_cgs_v1.o
-	$(CC) -o $@ main_qr_gramschmidt.c qr_mgs_v0.o qr_mgs_v1.o qr_cgs_v1.o $(LDFLAGS)
+qr_cgs2_v1.o: qr_cgs2_v1.c
+	$(CC) -c $(CCFLAGS) -o $@ qr_cgs2_v1.c
+
+main_qr_gramschmidt.exe: main_qr_gramschmidt.c qr_mgs_v0.o qr_mgs_v1.o qr_cgs_v1.o qr_cgs2_v1.o
+	$(CC) -o $@ main_qr_gramschmidt.c qr_mgs_v0.o qr_mgs_v1.o qr_cgs_v1.o qr_cgs2_v1.o $(LDFLAGS)
 
 clean:
 	rm -f *.exe *.o

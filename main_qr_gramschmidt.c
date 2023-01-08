@@ -8,6 +8,7 @@
 extern void qr_mgs_v0 (int M, int N, double **A, double **Q, double **R );
 extern void qr_mgs_v1 (int M, int N, double **Q, double **R );
 extern void qr_cgs_v1 (int M, int N, double **Q, double **R );
+extern void qr_cgs2_v1 (int M, int N, double **Q, double **R, double *tmp );
 
 int main(int argc, char ** argv) {
 
@@ -67,8 +68,14 @@ int main(int argc, char ** argv) {
    //for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i][j] = A[i][j];
    //qr_mgs_v1 (m, n, Q, R);
 
+   //for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i][j] = A[i][j];
+   //qr_cgs_v1 (m, n, Q, R);
+
+   double *work;
+   work = (double *) malloc( n * sizeof(double) );
    for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i][j] = A[i][j];
-   qr_cgs_v1 (m, n, Q, R);
+   qr_cgs2_v1 (m, n, Q, R, work);
+   free(work);
 
 
 /*************************************************************/
@@ -88,7 +95,7 @@ int main(int argc, char ** argv) {
 //for(j = 0; j < n; j++){
 //printf("%+e ",Q[i][j]);} printf("\n");} printf("];\n");
 
-   printf("[ MGS   ] m = %4d; n = %4d;",m,n);
+   printf("[ GramSchmidt   ] m = %4d; n = %4d;",m,n);
 
    normR = 0.0e+00;
 
