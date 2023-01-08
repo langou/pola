@@ -2,7 +2,7 @@ CC = gcc
 CCFLAGS = 
 LDFLAGS = -lm
 
-all: main_cholesky.exe main_trtri.exe main_lauum.exe main_cholinv.exe main_cholinv_onesweep.exe main_gghd2.exe main_gehd2_householder.exe main_qr_householder.exe main_qr_mgs.exe
+all: main_cholesky.exe main_trtri.exe main_lauum.exe main_cholinv.exe main_cholinv_onesweep.exe main_gghd2.exe main_gehd2_householder.exe main_qr_householder.exe main_qr_gramschmidt.exe
 
 main_gehd2_householder.exe: main_gehd2_householder.c
 	$(CC) -o $@ main_gehd2_householder.c $(LDFLAGS)
@@ -43,8 +43,8 @@ qr_mgs_v1.o: qr_mgs_v1.c
 qr_cgs_v1.o: qr_cgs_v1.c
 	$(CC) -c $(CCFLAGS) -o $@ qr_cgs_v1.c
 
-main_qr_mgs.exe: main_qr_mgs.c qr_mgs_v0.o qr_mgs_v1.o qr_cgs_v1.o
-	$(CC) -o $@ main_qr_mgs.c qr_mgs_v0.o qr_mgs_v1.o qr_cgs_v1.o $(LDFLAGS)
+main_qr_gramschmidt.exe: main_qr_gramschmidt.c qr_mgs_v0.o qr_mgs_v1.o qr_cgs_v1.o
+	$(CC) -o $@ main_qr_gramschmidt.c qr_mgs_v0.o qr_mgs_v1.o qr_cgs_v1.o $(LDFLAGS)
 
 clean:
 	rm -f *.exe *.o
