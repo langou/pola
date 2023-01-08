@@ -1,0 +1,2 @@
+
+(*) the check for the code main_qr_householder.exe does not work for M < N

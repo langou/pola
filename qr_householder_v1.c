@@ -1,10 +1,13 @@
 #include <math.h>
 
-void qr_householder_v0 (int M, int N, int P, double **A )
-//void qr_householder_v0 (int M, int N, int P, double A[M][N] )
+// this version has a workarray tmp, this might help with parallelism or data movement
+// this version is closer from the LAPACK GEQR2 version
+
+void qr_householder_v1 (int M, int N, int P, double **A, double *tmp )
+//void qr_householder_v1 (int M, int N, int P, double A[M][N], tmp[N] )
 {
   int i, j, k;
-  double norma2, norma, tau, tmp;
+  double norma2, norma, tau;
 
 #pragma scop
 
@@ -25,14 +28,14 @@ for(k = 0; k < P; k++){
    A[k][k]= ( A[k][k] > 0 ) ? ( - norma ) : ( norma ) ;
    
    for(j = k+1; j < N; j++){
-      tmp = A[k][j];
+      tmp[j] = A[k][j];
       for(i = k+1; i < M; i++){
-            tmp += A[i][k] * A[i][j];
+            tmp[j] += A[i][k] * A[i][j];
       }
-      tmp = tau * tmp;
-      A[k][j] = A[k][j] - tmp;
+      tmp[j] = tau * tmp[j];
+      A[k][j] = A[k][j] - tmp[j];
       for(i = k+1; i < M; i++){
-         A[i][j] = A[i][j] - A[i][k] * tmp;
+         A[i][j] = A[i][j] - A[i][k] * tmp[j];
       }
    }
 }
