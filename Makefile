@@ -37,8 +37,14 @@ main_qr_householder.exe: main_qr_householder.c qr_householder_v0.o qr_householde
 qr_mgs_v0.o: qr_mgs_v0.c
 	$(CC) -c $(CCFLAGS) -o $@ qr_mgs_v0.c
 
-main_qr_mgs.exe: main_qr_mgs.c qr_mgs_v0.o
-	$(CC) -o $@ main_qr_mgs.c qr_mgs_v0.o $(LDFLAGS)
+qr_mgs_v1.o: qr_mgs_v1.c
+	$(CC) -c $(CCFLAGS) -o $@ qr_mgs_v1.c
+
+qr_cgs_v1.o: qr_cgs_v1.c
+	$(CC) -c $(CCFLAGS) -o $@ qr_cgs_v1.c
+
+main_qr_mgs.exe: main_qr_mgs.c qr_mgs_v0.o qr_mgs_v1.o qr_cgs_v1.o
+	$(CC) -o $@ main_qr_mgs.c qr_mgs_v0.o qr_mgs_v1.o qr_cgs_v1.o $(LDFLAGS)
 
 clean:
 	rm -f *.exe *.o

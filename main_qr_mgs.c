@@ -6,6 +6,8 @@
 #define SQRT_FUN sqrt
 
 extern void qr_mgs_v0 (int M, int N, double **A, double **Q, double **R );
+extern void qr_mgs_v1 (int M, int N, double **Q, double **R );
+extern void qr_cgs_v1 (int M, int N, double **Q, double **R );
 
 int main(int argc, char ** argv) {
 
@@ -59,9 +61,15 @@ int main(int argc, char ** argv) {
 
 /*************************************************************/
 
-   //qr_householder_v0 (m, n, p, A);
+   //qr_mgs_v0 (m, n, A, Q, R);
 
-   qr_mgs_v0 (m, n, A, Q, R);
+
+   //for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i][j] = A[i][j];
+   //qr_mgs_v1 (m, n, Q, R);
+
+   for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i][j] = A[i][j];
+   qr_cgs_v1 (m, n, Q, R);
+
 
 /*************************************************************/
 
