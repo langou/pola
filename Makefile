@@ -2,7 +2,7 @@ CC = gcc
 CCFLAGS = 
 LDFLAGS = -lm
 
-all: main_cholesky.exe main_trtri.exe main_lauum.exe main_cholinv.exe main_cholinv_onesweep.exe main_gghd2.exe main_gehd2_householder.exe main_qr_householder.exe main_qr_gramschmidt.exe
+all: main_cholesky.exe main_trtri.exe main_lauum.exe main_cholinv.exe main_cholinv_onesweep.exe main_gghd2.exe main_gehd2_householder.exe main_qr_householder.exe main_qr_gramschmidt.exe main_qr_householder_x.exe
 
 main_gehd2_householder.exe: main_gehd2_householder.c
 	$(CC) -o $@ main_gehd2_householder.c $(LDFLAGS)
@@ -33,6 +33,12 @@ qr_householder_v1.o: qr_householder_v1.c
 
 main_qr_householder.exe: main_qr_householder.c qr_householder_v0.o qr_householder_v1.o
 	$(CC) -o $@ main_qr_householder.c qr_householder_v0.o qr_householder_v1.o $(LDFLAGS)
+
+qr_householder_x0.o: qr_householder_x0.c
+	$(CC) -c $(CCFLAGS) -o $@ qr_householder_x0.c
+
+main_qr_householder_x.exe: main_qr_householder_x.c qr_householder_x0.o
+	$(CC) -o $@ main_qr_householder_x.c qr_householder_x0.o $(LDFLAGS)
 
 qr_mgs_v0.o: qr_mgs_v0.c
 	$(CC) -c $(CCFLAGS) -o $@ qr_mgs_v0.c
