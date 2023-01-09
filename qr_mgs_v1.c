@@ -2,8 +2,8 @@
 
 // qr_mgs_v1
 
-void qr_mgs_v1 (int M, int N, double **Q, double **R )
-//void qr_mgs_v1 (int M, int N, double Q[M][N], double R[N][N] )
+//void qr_mgs_v1 (int M, int N, double **Q, double **R )
+void qr_mgs_v1 (int M, int N, double Q[M][N], double R[N][N] )
 {
   int i, j, k;
   double nrm;

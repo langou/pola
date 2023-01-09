@@ -6,7 +6,8 @@
 #define SQRT_FUN sqrt
 
 extern void qr_mgs_v0 (int M, int N, double **A, double **Q, double **R );
-extern void qr_mgs_v1 (int M, int N, double **Q, double **R );
+//extern void qr_mgs_v1 (int M, int N, double **Q, double **R );
+extern void qr_mgs_v1 (int M, int N, double Q[M][N], double R[N][N] );
 extern void qr_cgs_v1 (int M, int N, double **Q, double **R );
 extern void qr_cgs2_v1 (int M, int N, double **Q, double **R, double *tmp );
 
@@ -14,7 +15,7 @@ int main(int argc, char ** argv) {
 
    int i, j, k, m, n, p, l;
    double *AAA, *BBB, *QQQ, *RRR;
-   double **A, **Q, **B, **R;
+   double **A, **B;
    double norma, norma2, normR, normA, tmp;
 
    m = 10;
@@ -35,17 +36,20 @@ int main(int argc, char ** argv) {
    A = (double **) malloc( m * sizeof(double*) );
    for(i = 0; i < m; i++) A[i] = AAA + i * n ;
 
-   QQQ = (double *) malloc( m * n * sizeof(double) );
-   Q = (double **) malloc( m * sizeof(double*) );
-   for(i = 0; i < m; i++) Q[i] = QQQ + i * n ;
+   //QQQ = (double *) malloc( m * n * sizeof(double) );
+   //Q = (double **) malloc( m * sizeof(double*) );
+   //for(i = 0; i < m; i++) Q[i] = QQQ + i * n ;
 
    BBB = (double *) malloc( m * n * sizeof(double) );
    B = (double **) malloc( m * sizeof(double*) );
    for(i = 0; i < m; i++) B[i] = BBB + i * n ;
 
-   RRR = (double *) malloc( n * n * sizeof(double) );
-   R = (double **) malloc( n * sizeof(double*) );
-   for(i = 0; i < n; i++) R[i] = RRR + i * n ;
+   //RRR = (double *) malloc( n * n * sizeof(double) );
+   //R = (double **) malloc( n * sizeof(double*) );
+   //for(i = 0; i < n; i++) R[i] = RRR + i * n ;
+
+   double(*Q)[n] = malloc(sizeof(double[m][n]));
+   double(*R)[n] = malloc(sizeof(double[n][n]));
 
 //   Create a random m-by-n matrix A.
    for(i = 0; i < m; i++)
@@ -65,17 +69,17 @@ int main(int argc, char ** argv) {
    //qr_mgs_v0 (m, n, A, Q, R);
 
 
-   //for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i][j] = A[i][j];
-   //qr_mgs_v1 (m, n, Q, R);
+   for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i][j] = A[i][j];
+   qr_mgs_v1 (m, n, Q, R);
 
    //for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i][j] = A[i][j];
    //qr_cgs_v1 (m, n, Q, R);
 
-   double *work;
-   work = (double *) malloc( n * sizeof(double) );
-   for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i][j] = A[i][j];
-   qr_cgs2_v1 (m, n, Q, R, work);
-   free(work);
+   //double *work;
+   //work = (double *) malloc( n * sizeof(double) );
+   //for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i][j] = A[i][j];
+   //qr_cgs2_v1 (m, n, Q, R, work);
+   //free(work);
 
 
 /*************************************************************/
@@ -163,9 +167,9 @@ int main(int argc, char ** argv) {
 
 //Free memory
    free( R );
-   free( RRR );
+   //free( RRR );
    free( Q );
-   free( QQQ );
+   //free( QQQ );
    free( B );
    free( BBB );
    free( A );
