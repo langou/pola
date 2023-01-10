@@ -43,11 +43,17 @@ main_qr_householder_x.exe: main_qr_householder_x.c qr_householder_x0.o
 qr_mgs_v0.o: qr_mgs_v0.c
 	$(CC) -c $(CCFLAGS) -o $@ qr_mgs_v0.c
 
-qr_mgs_v1.o: qr_mgs_v1.c
-	$(CC) -c $(CCFLAGS) -o $@ qr_mgs_v1.c
+qr_mgs_v1_rl.o: qr_mgs_v1_rl.c
+	$(CC) -c $(CCFLAGS) -o $@ qr_mgs_v1_rl.c
 
-qr_cgs_v1.o: qr_cgs_v1.c
-	$(CC) -c $(CCFLAGS) -o $@ qr_cgs_v1.c
+qr_mgs_v1_ll.o: qr_mgs_v1_ll.c
+	$(CC) -c $(CCFLAGS) -o $@ qr_mgs_v1_ll.c
+
+qr_cgs_v1_ll.o: qr_cgs_v1_ll.c
+	$(CC) -c $(CCFLAGS) -o $@ qr_cgs_v1_ll.c
+
+qr_cgs_v1_rl.o: qr_cgs_v1_rl.c
+	$(CC) -c $(CCFLAGS) -o $@ qr_cgs_v1_rl.c
 
 qr_cgs2_v1.o: qr_cgs2_v1.c
 	$(CC) -c $(CCFLAGS) -o $@ qr_cgs2_v1.c
@@ -58,8 +64,8 @@ check_qr_repres.o: check_qr_repres.c
 check_orth.o: check_orth.c
 	$(CC) -c $(CCFLAGS) -o $@ check_orth.c
 
-main_qr_gramschmidt.exe: main_qr_gramschmidt.c qr_mgs_v0.o qr_mgs_v1.o qr_cgs_v1.o qr_cgs2_v1.o check_qr_repres.o check_orth.o
-	$(CC) -o $@ main_qr_gramschmidt.c qr_mgs_v0.o qr_mgs_v1.o qr_cgs_v1.o qr_cgs2_v1.o check_qr_repres.o check_orth.o $(LDFLAGS)
+main_qr_gramschmidt.exe: main_qr_gramschmidt.c qr_mgs_v0.o qr_mgs_v1_rl.o qr_mgs_v1_ll.o qr_cgs_v1_ll.o qr_cgs_v1_rl.o qr_cgs2_v1.o check_qr_repres.o check_orth.o
+	$(CC) -o $@ main_qr_gramschmidt.c qr_mgs_v0.o qr_mgs_v1_rl.o qr_mgs_v1_ll.o qr_cgs_v1_ll.o qr_cgs_v1_rl.o qr_cgs2_v1.o check_qr_repres.o check_orth.o $(LDFLAGS)
 
 clean:
 	rm -f *.exe *.o

@@ -3,15 +3,19 @@
 #include <string.h>
 #include <math.h>
 
-#define CGS_V1    1
-#define MGS_V0    2
-#define MGS_V1    3
-#define CGS2_V1   4
-#define UNKNOWN 999
+#define CGS_V1_LL    1
+#define CGS_V1_RL    2
+#define MGS_V0       3
+#define MGS_V1_LL    4
+#define MGS_V1_RL    5
+#define CGS2_V1      6
+#define UNKNOWN    999
 
 extern void qr_mgs_v0 (int M, int N, double A[M][N], double Q[M][N], double R[N][N] );
-extern void qr_mgs_v1 (int M, int N, double Q[M][N], double R[N][N] );
-extern void qr_cgs_v1 (int M, int N, double Q[M][N], double R[N][N] );
+extern void qr_mgs_v1_ll (int M, int N, double Q[M][N], double R[N][N] );
+extern void qr_mgs_v1_rl (int M, int N, double Q[M][N], double R[N][N] );
+extern void qr_cgs_v1_ll (int M, int N, double Q[M][N], double R[N][N] );
+extern void qr_cgs_v1_rl (int M, int N, double Q[M][N], double R[N][N] );
 extern void qr_cgs2_v1 (int M, int N, double Q[M][N], double R[N][N], double *tmp );
 
 extern double check_qr_repres(int M, int N, double A[M][N], double Q[M][N], double R[N][N] );
@@ -26,7 +30,7 @@ int main(int argc, char ** argv) {
 
    m = 10;
    n = 4;
-   method = MGS_V1;
+   method = MGS_V1_RL;
 
    for(i = 1; i < argc; i++){
       if( strcmp( *(argv + i), "-m") == 0) {
@@ -38,12 +42,16 @@ int main(int argc, char ** argv) {
          i++;
       }
       if( strcmp( *(argv + i), "-method") == 0) {
-         if( strcmp( *(argv + i + 1), "cgs_v1") == 0)
-           method = CGS_V1;
+         if( strcmp( *(argv + i + 1), "cgs_v1_rl") == 0)
+           method = CGS_V1_RL;
+	 else if( strcmp( *(argv + i + 1), "cgs_v1_ll") == 0)
+           method = CGS_V1_LL;
 	 else if( strcmp( *(argv + i + 1), "mgs_v0") == 0)
            method = MGS_V0;
-	 else if( strcmp( *(argv + i + 1), "mgs_v1") == 0)
-           method = MGS_V1;
+	 else if( strcmp( *(argv + i + 1), "mgs_v1_rl") == 0)
+           method = MGS_V1_RL;
+	 else if( strcmp( *(argv + i + 1), "mgs_v1_ll") == 0)
+           method = MGS_V1_LL;
 	 else if( strcmp( *(argv + i + 1), "cgs2_v1") == 0)
            method = CGS2_V1;
 	 else 
@@ -75,16 +83,28 @@ int main(int argc, char ** argv) {
       free(B);
    }
 
-   if ( method == MGS_V1 ) { 
-      printf("%%%% [ MGS_V1        ] m = %4d; n = %4d; ",m,n);
+   if ( method == MGS_V1_RL ) { 
+      printf("%%%% [ MGS_V1_RL      ] m = %4d; n = %4d; ",m,n);
       for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i][j] = A[i][j];
-      qr_mgs_v1 (m, n, Q, R);
+      qr_mgs_v1_rl (m, n, Q, R);
    }
 
-   if ( method == CGS_V1 ) { 
-      printf("%%%% [ CGS_V1        ] m = %4d; n = %4d; ",m,n);
+   if ( method == MGS_V1_LL ) { 
+      printf("%%%% [ MGS_V1_LL      ] m = %4d; n = %4d; ",m,n);
       for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i][j] = A[i][j];
-      qr_cgs_v1 (m, n, Q, R);
+      qr_mgs_v1_ll (m, n, Q, R);
+   }
+
+   if ( method == CGS_V1_RL ) { 
+      printf("%%%% [ CGS_V1_RL     ] m = %4d; n = %4d; ",m,n);
+      for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i][j] = A[i][j];
+      qr_cgs_v1_rl (m, n, Q, R);
+   }
+   
+   if ( method == CGS_V1_LL ) { 
+      printf("%%%% [ CGS_V1_LL     ] m = %4d; n = %4d; ",m,n);
+      for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i][j] = A[i][j];
+      qr_cgs_v1_ll (m, n, Q, R);
    }
 
    if ( method == CGS2_V1 ) { 
