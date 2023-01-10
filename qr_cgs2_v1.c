@@ -14,7 +14,7 @@ for (k = 0; k < N; k++) {
       nrm += Q[i][k] * Q[i][k];
    R[k][k] = sqrt(nrm);
    for (i = 0; i < M; i++)
-      Q[i][k] = Q[i][k] / R[k][k];
+      Q[i][k] /= R[k][k];
    for (j = k + 1; j < N; j++) {
       R[k][j] = 0.0e+00;
       for (i = 0; i < M; i++)
@@ -22,7 +22,7 @@ for (k = 0; k < N; k++) {
    }
    for (j = k + 1; j < N; j++) {
       for (i = 0; i < M; i++)
-         Q[i][j] = Q[i][j] - Q[i][k] * R[k][j];
+         Q[i][j] -= Q[i][k] * R[k][j];
    }
    for (j = k + 1; j < N; j++) {
       tmp[j] = 0.0e+00;
@@ -32,7 +32,7 @@ for (k = 0; k < N; k++) {
    }
    for (j = k + 1; j < N; j++) {
       for (i = 0; i < M; i++)
-         Q[i][j] = Q[i][j] - Q[i][k] * tmp[j];
+         Q[i][j] -= Q[i][k] * tmp[j];
    }
 }
 #pragma endscop
