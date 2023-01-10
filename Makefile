@@ -1,5 +1,5 @@
 CC = gcc
-CCFLAGS = 
+CCFLAGS = -Wall -Wno-unknown-pragmas
 LDFLAGS = -lm
 
 all: main_cholesky.exe main_trtri.exe main_lauum.exe main_cholinv.exe main_cholinv_onesweep.exe main_gghd2.exe main_gehd2_householder.exe main_qr_householder.exe main_qr_gramschmidt.exe main_qr_householder_x.exe
@@ -52,8 +52,14 @@ qr_cgs_v1.o: qr_cgs_v1.c
 qr_cgs2_v1.o: qr_cgs2_v1.c
 	$(CC) -c $(CCFLAGS) -o $@ qr_cgs2_v1.c
 
-main_qr_gramschmidt.exe: main_qr_gramschmidt.c qr_mgs_v0.o qr_mgs_v1.o qr_cgs_v1.o qr_cgs2_v1.o
-	$(CC) -o $@ main_qr_gramschmidt.c qr_mgs_v0.o qr_mgs_v1.o qr_cgs_v1.o qr_cgs2_v1.o $(LDFLAGS)
+check_qr_repres.o: check_qr_repres.c
+	$(CC) -c $(CCFLAGS) -o $@ check_qr_repres.c
+
+check_orth.o: check_orth.c
+	$(CC) -c $(CCFLAGS) -o $@ check_orth.c
+
+main_qr_gramschmidt.exe: main_qr_gramschmidt.c qr_mgs_v0.o qr_mgs_v1.o qr_cgs_v1.o qr_cgs2_v1.o check_qr_repres.o check_orth.o
+	$(CC) -o $@ main_qr_gramschmidt.c qr_mgs_v0.o qr_mgs_v1.o qr_cgs_v1.o qr_cgs2_v1.o check_qr_repres.o check_orth.o $(LDFLAGS)
 
 clean:
 	rm -f *.exe *.o
