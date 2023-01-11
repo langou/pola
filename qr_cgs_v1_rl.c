@@ -16,7 +16,8 @@ for (i = 0; i < N; i++) {
    for (j = i + 1; j < N; j++) {
       R[i][j] = 0.0e+00;
       for (k = 0; k < M; k++)
-         R[i][j] += Q[k][i] * A[k][j];
+//       R[i][j] += Q[k][i] * Q[k][j]; // MGS
+         R[i][j] += Q[k][i] * A[k][j]; // CGS
    }
    for (j = i + 1; j < N; j++) {
       for (k = 0; k < M; k++)

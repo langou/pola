@@ -1,7 +1,8 @@
 #include <math.h>
 
 // qr_mgs_v1_ll
-//
+// this is the left-looking variant of MGS
+
 void qr_mgs_v1_ll (int M, int N, double A[M][N], double R[N][N] )
 {
 int i, j, k;
