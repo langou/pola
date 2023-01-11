@@ -15,7 +15,7 @@ extern void qr_mgs_v0 (int M, int N, double A[M][N], double Q[M][N], double R[N]
 extern void qr_mgs_v1_ll (int M, int N, double Q[M][N], double R[N][N] );
 extern void qr_mgs_v1_rl (int M, int N, double Q[M][N], double R[N][N] );
 extern void qr_cgs_v1_ll (int M, int N, double Q[M][N], double R[N][N] );
-extern void qr_cgs_v1_rl (int M, int N, double Q[M][N], double R[N][N] );
+extern void qr_cgs_v1_rl (int M, int N, double A[M][N], double Q[M][N], double R[N][N] );
 extern void qr_cgs2_v1 (int M, int N, double Q[M][N], double R[N][N], double *tmp );
 
 extern double check_qr_repres(int M, int N, double A[M][N], double Q[M][N], double R[N][N] );
@@ -97,8 +97,11 @@ int main(int argc, char ** argv) {
 
    if ( method == CGS_V1_RL ) { 
       printf("%%%% [ CGS_V1_RL     ] m = %4d; n = %4d; ",m,n);
+      double(*B)[n] = malloc(sizeof(double[m][n]));
+      for(i = 0; i < m; i++) for(j = 0; j < n; j++) B[i][j] = A[i][j];
       for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i][j] = A[i][j];
-      qr_cgs_v1_rl (m, n, Q, R);
+      qr_cgs_v1_rl (m, n, B, Q, R);
+      free(B);
    }
    
    if ( method == CGS_V1_LL ) { 
