@@ -1,13 +1,13 @@
 #include <math.h>
 
-void qr_householder_x0 ( int M, int N, int P, double A[M][N], double R[N][N], double work[N] )
+void qr_householder_a2q ( int M, int N, double A[M][N], double R[N][N], double work[N] )
 {
   int i, j, k;
   double norma2, norma;
 
 #pragma scop
 
-for(k = 0; k < P; k++){
+for(k = 0; k < N; k++){
    norma2 = 0.e+00;
    for(i = k+1; i < M; i++){
       norma2 += A[i][k] * A[i][k];
@@ -40,7 +40,7 @@ for(i = 0; i < N; i++)
    for(j = i; j < N; j++)
       R[i][j] = A[i][j];
 
-for(k = P-1; k > -1; k--){
+for(k = N-1; k > -1; k--){
 
    for(j = k+1; j < N; j++){
 

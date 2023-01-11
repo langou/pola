@@ -1,11 +1,18 @@
 #include <math.h>
 
-// qr_cgs_v1_rl
+// qr_cgs_rl
+//
+// this is the right-looking (RL) version of Classical Gram-Schmidt (CGS)
+//
+// array A is input only
+// arrays Q and R do not need to be initialized in input, they are ouput only
+// the strictly lower part of R is not referenced
 
-void qr_cgs_v1_rl (int M, int N, double A[M][N], double Q[M][N], double R[N][N] )
+void qr_cgs_rl (int M, int N, double A[M][N], double Q[M][N], double R[N][N] )
 {
 int i, j, k;
 #pragma scop
+for(i = 0; i < M; i++) for(j = 0; j < N; j++) Q[i][j] = A[i][j];
 for (i = 0; i < N; i++) {
    R[i][i] = 0.0e+00;
    for (k = 0; k < M; k++)

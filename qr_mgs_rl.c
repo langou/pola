@@ -1,10 +1,10 @@
 #include <math.h>
 
-// qr_mgs_v1_rl
-// this is the right-looking variant of MGS
-// this code is ``same`` as polybench
+// qr_mgs_rl
+// this is the right-looking (RL) variant of Modified Gram-Schmidt (MGS)
+// this code is ``same`` as polybench, just that we require only one array for A
 
-void qr_mgs_v1_rl (int M, int N, double A[M][N], double R[N][N] )
+void qr_mgs_rl (int M, int N, double A[M][N], double R[N][N] )
 {
 int i, j, k;
 #pragma scop

@@ -1,8 +1,8 @@
 #include <math.h>
 
-// qr_cgs_v1_ll 
+// qr_cgs_ll 
 
-void qr_cgs_v1_ll (int M, int N, double A[M][N], double R[N][N] )
+void qr_cgs_ll (int M, int N, double A[M][N], double R[N][N] )
 {
 int i, j, k;
 #pragma scop

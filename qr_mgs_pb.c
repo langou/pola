@@ -1,8 +1,8 @@
 #include <math.h>
 
-// qr_mgs_v0 is the version in polybench 3.2
+// qr_mgs_pb is the version in polybench 3.2
 
-void qr_mgs_v0 (int M, int N, double A[M][N], double Q[M][N], double R[N][N] )
+void qr_mgs_pb (int M, int N, double A[M][N], double Q[M][N], double R[N][N] )
 {
   int i, j, k;
   double nrm;

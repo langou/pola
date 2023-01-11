@@ -1,8 +1,8 @@
 #include <math.h>
 
-// qr_cgs2_v1
+// qr_cgs2_ll
 
-void qr_cgs2_v1 (int M, int N, double Q[M][N], double R[N][N], double tmp[N] )
+void qr_cgs2_ll (int M, int N, double Q[M][N], double R[N][N], double tmp[N] )
 {
   int i, j, k;
 
