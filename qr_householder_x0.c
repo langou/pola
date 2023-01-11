@@ -1,9 +1,6 @@
 #include <math.h>
 
-// this version has a workarray tmp, this might help with parallelism or data movement
-// this version is closer from the LAPACK GEQR2 version
-
-void qr_householder_x0 (int M, int N, int P, double **A, double **R, double *tau, double *tmp )
+void qr_householder_x0 ( int M, int N, int P, double A[M][N], double R[N][N], double work[N] )
 {
   int i, j, k;
   double norma2, norma;
@@ -19,7 +16,7 @@ for(k = 0; k < P; k++){
    
    A[k][k] = ( A[k][k] > 0 ) ? ( A[k][k] + norma ) : ( A[k][k] - norma ) ;
    
-   tau[k] = 2.0 / ( 1.0 + norma2 / ( A[k][k] * A[k][k] ) ) ;
+   work[k] = 2.0 / ( 1.0 + norma2 / ( A[k][k] * A[k][k] ) ) ;
    
    for(i = k+1; i < M; i++){
       A[i][k] /= A[k][k];
@@ -27,69 +24,63 @@ for(k = 0; k < P; k++){
    A[k][k]= ( A[k][k] > 0 ) ? ( - norma ) : ( norma ) ;
    
    for(j = k+1; j < N; j++){
-      tmp[j] = A[k][j];
+      work[j] = A[k][j];
       for(i = k+1; i < M; i++){
-            tmp[j] += A[i][k] * A[i][j];
+            work[j] += A[i][k] * A[i][j];
       }
-      tmp[j] = tau[k] * tmp[j];
-      A[k][j] = A[k][j] - tmp[j];
+      work[j] = work[k] * work[j];
+      A[k][j] = A[k][j] - work[j];
       for(i = k+1; i < M; i++){
-         A[i][j] = A[i][j] - A[i][k] * tmp[j];
+         A[i][j] = A[i][j] - A[i][k] * work[j];
       }
    }
 }
 
+for(i = 0; i < N; i++)
+   for(j = i; j < N; j++)
+      R[i][j] = A[i][j];
 
-   for(i = 0; i < N; i++)
-      for(j = 0; j < N; j++)
-         R[i][j] = A[i][j];
+for(k = P-1; k > -1; k--){
 
-   for(k = P-1; k > -1; k--){
+   for(j = k+1; j < N; j++){
 
-      for(j = k+1; j < N; j++){
-
-         tmp[j] = 0.e+00;
-
-            for(i = k+1; i < M; i++){
-
-               tmp[j] += A[i][k] * A[i][j];
-
-            }
-
-      }
-
-      tmp[k] = 1.0e+00;
-
-      for(j = k; j < N; j++){ 
-
-         tmp[j] *= tau[k];
-
-      }
-
-      A[k][k] = 1.0e+00 - tmp[k];
-
-      for(j = k+1; j < N; j++){
-
-         A[k][j] = -tmp[j];
-
-      }
-      for(j = k+1; j < N; j++){
+      work[j] = 0.e+00;
 
          for(i = k+1; i < M; i++){
 
-            A[i][j] -= A[i][k] * tmp[j];
+            work[j] += A[i][k] * A[i][j];
 
          }
-      }
-      
-      for(i = k+1; i < M; i++){
-         A[i][k] = - A[i][k] * tmp[k];
-      }
-
 
    }
 
+   for(j = k+1; j < N; j++){ 
 
+      work[j] *= work[k];
+
+   }
+
+   A[k][k] = 1.0e+00 - work[k];
+
+   for(j = k+1; j < N; j++){
+
+      A[k][j] = -work[j];
+
+   }
+   for(j = k+1; j < N; j++){
+
+      for(i = k+1; i < M; i++){
+
+         A[i][j] -= A[i][k] * work[j];
+
+      }
+   }
+   
+   for(i = k+1; i < M; i++){
+      A[i][k] = - A[i][k] * work[k];
+   }
+
+
+}
 #pragma endscop
-
 }

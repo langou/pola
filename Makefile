@@ -37,8 +37,8 @@ main_qr_householder.exe: main_qr_householder.c qr_householder_v0.o qr_householde
 qr_householder_x0.o: qr_householder_x0.c
 	$(CC) -c $(CCFLAGS) -o $@ qr_householder_x0.c
 
-main_qr_householder_x.exe: main_qr_householder_x.c qr_householder_x0.o
-	$(CC) -o $@ main_qr_householder_x.c qr_householder_x0.o $(LDFLAGS)
+main_qr_householder_x.exe: main_qr_householder_x.c qr_householder_x0.o check_qr_repres.o check_orth.o
+	$(CC) -o $@ main_qr_householder_x.c qr_householder_x0.o check_qr_repres.o check_orth.o $(LDFLAGS)
 
 qr_mgs_v0.o: qr_mgs_v0.c
 	$(CC) -c $(CCFLAGS) -o $@ qr_mgs_v0.c
