@@ -1,6 +1,6 @@
 #include <math.h>
 
-// qr_mgs_ll
+// qr_mgs_ll__tiled
 // this is the left-looking variant of MGS
 
 void qr_mgs_ll__tiled (int M, int N, int B, double A[M][N], double R[N][N] )
@@ -12,7 +12,7 @@ int j0;
 for (j0 = 0; j0 < N; j0+=B) {
 // read A(1:M,i0:i0+B)
    for (i = 0; i < j0; i++) {
-//    read A(1:M,j)
+//    read A(1:M,i)
       for (j = j0; ((j < j0+B)&&(j < N)); j++) {
          R[i][j] = 0.0e+00;
          for (k = 0; k < M; k++)
@@ -20,6 +20,7 @@ for (j0 = 0; j0 < N; j0+=B) {
          for (k = 0; k < M; k++)
             A[k][j] -= A[k][i] * R[i][j];
       }
+//    discard A(1:M,i)
    }
    for (j = j0; ((j < j0+B)&&(j < N)); j++) {
       for (i = j0; i < j; i++) {
