@@ -45,15 +45,15 @@ int main(int argc, char ** argv) {
 
 /*************************************************************/
 
-   printf("%%%% [ MGS_LL        ] m = %4d; n = %4d; ",m,n);
+   printf("%%%% [ MGS_LL        ] m = %4d; n = %4d; b = %4d; ",m,n,b);
    for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i][j] = A[i][j];
    qr_mgs_ll__tiled (m, n, b, Q, R);
 
 /*************************************************************/
 
-   printf("repres = %8.1e; ", check_qr_repres( m, n, A, Q, R ));
+   printf("repres = %17.10e; ", check_qr_repres( m, n, A, Q, R ));
 
-   printf("orth = %8.1e;\n", check_orth( m, n, Q ));
+   printf("orth = %17.10e;\n", check_orth( m, n, Q ));
 
    free( R );
    free( Q );

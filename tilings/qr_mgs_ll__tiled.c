@@ -8,7 +8,6 @@ void qr_mgs_ll__tiled (int M, int N, int B, double A[M][N], double R[N][N] )
 int i, j, k;
 int j0;
 #pragma scop
-//for (j = 0; j < N; j++) {
 for (j0 = 0; j0 < N; j0+=B) {
 // read A(1:M,i0:i0+B)
    for (i = 0; i < j0; i++) {

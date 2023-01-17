@@ -18,7 +18,7 @@ int i0;
 #pragma scop
 for (i0 = 0; i0 < N; i0+=B) {
 ////////////////////////////////////////////////////////////
-// read A(1:M,i0:i0+B)
+// read A(1:M,i0:i0+B-1)
    for (i = i0; ((i < i0+B)&&(i < N)); i++) {
       R[i][i] = 0.0e+00; 
       for (k = 0; k < M; k++)
@@ -46,7 +46,7 @@ for (i0 = 0; i0 < N; i0+=B) {
       }
 //    write A(1:M,j)
    }
-// write A(1:M,i0:i0+B)
+// write A(1:M,i0:i0+B-1)
 }
 #pragma endscop
 }
