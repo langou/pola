@@ -1,0 +1,34 @@
+Hello, 
+
+The io of lu is optimal at ( 2 / 3 ) * n^3  / sqrt( S ). See attached code. 
+
+Can we please change table 1 to indicate this? 
+
+Right now the ratio is at 3/2, it should be at 1 with a checkmark.
+
+Can we please change table 1 to indicate this? 
+
+I also would love these codes to be in supplementary material. (See PDF.)
+
+This is the same work as for Cholesky. This is a schedule that performs the optimal  ( 2 / 3 ) * n^3  / sqrt( S ). See attached code. 
+
+The attached code has a parameter nb (the block size) and then its parameters are:
+
+max_cache_useage_ = nb * nb + 2 * nb;
+
+number_io_ = ( ( 2 * n * n * n / nb + 9 * n * n - 5 * nb * n ) / 3 )
+
+IO counts READ and WRITE combined. (WRITE being O(n^2) so negligible.)
+
+Typically one would take nb = floor( sqrt(S+1) - 1 ), so that nb^2 +nb < S 
+
+So asymptotically, take nb = sqrt( S ), then 
+
+max_cache_useage_ < S 
+
+number_io_ = ( 2 / 3 ) * n^3  / sqrt( S )
+
+( Same as the lower bound returned from IOLB. )
+
+Cheers, 
+Julien.
