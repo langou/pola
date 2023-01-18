@@ -46,8 +46,11 @@ main_trtri.o: main_trtri.c
 main_lauum.o: main_lauum.c
 	$(CC) -c $(CCFLAGS) -o $@ main_lauum.c
 
-qr_householder_a2v.o: qr_householder_a2v.c
-	$(CC) -c $(CCFLAGS) -o $@ qr_householder_a2v.c
+qr_householder_a2vrl.o: qr_householder_a2vrl.c
+	$(CC) -c $(CCFLAGS) -o $@ qr_householder_a2vrl.c
+
+qr_householder_a2v_ll.o: qr_householder_a2vll.c
+	$(CC) -c $(CCFLAGS) -o $@ qr_householder_a2vll.c
 
 qr_householder_v2q.o: qr_householder_v2q.c
 	$(CC) -c $(CCFLAGS) -o $@ qr_householder_v2q.c
@@ -82,8 +85,8 @@ check_orth.o: check_orth.c
 main_qr.o: main_qr.c
 	$(CC) -c $(CCFLAGS) -o $@ main_qr.c
 
-main_qr.exe: main_qr.o qr_householder_a2v.o qr_householder_v2q.o qr_householder_a2q.o qr_mgs_pb.o qr_mgs_rl.o qr_mgs_ll.o qr_cgs_ll.o qr_cgs_rl.o qr_cgs2_ll.o check_qr_repres.o check_orth.o
-	$(CC) -o $@ main_qr.o qr_householder_a2v.o qr_householder_v2q.o qr_householder_a2q.o qr_mgs_pb.o qr_mgs_rl.o qr_mgs_ll.o qr_cgs_ll.o qr_cgs_rl.o qr_cgs2_ll.o check_qr_repres.o check_orth.o $(LDFLAGS)
+main_qr.exe: main_qr.o qr_householder_a2vll.o qr_householder_a2vrl.o qr_householder_v2q.o qr_householder_a2q.o qr_mgs_pb.o qr_mgs_rl.o qr_mgs_ll.o qr_cgs_ll.o qr_cgs_rl.o qr_cgs2_ll.o check_qr_repres.o check_orth.o
+	$(CC) -o $@ main_qr.o qr_householder_a2vll.o qr_householder_a2vrl.o qr_householder_v2q.o qr_householder_a2q.o qr_mgs_pb.o qr_mgs_rl.o qr_mgs_ll.o qr_cgs_ll.o qr_cgs_rl.o qr_cgs2_ll.o check_qr_repres.o check_orth.o $(LDFLAGS)
 
 clean:
 	rm -f *.exe *.o

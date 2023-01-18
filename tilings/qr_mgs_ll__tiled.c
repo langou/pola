@@ -9,7 +9,7 @@ int i, j, k;
 int j0;
 #pragma scop
 for (j0 = 0; j0 < N; j0+=B) {
-// read A(1:M,i0:i0+B)
+// read A(1:M,j0:j0+B)
    for (i = 0; i < j0; i++) {
 //    read A(1:M,i)
       for (j = j0; ((j < j0+B)&&(j < N)); j++) {
@@ -36,7 +36,7 @@ for (j0 = 0; j0 < N; j0+=B) {
       for (k = 0; k < M; k++)
          A[k][j] /= R[j][j];
    }
-// write A(1:M,i0:i0+B)
+// write A(1:M,j0:j0+B)
 }
 #pragma endscop
 }
