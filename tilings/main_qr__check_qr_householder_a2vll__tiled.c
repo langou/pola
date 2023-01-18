@@ -46,7 +46,7 @@ int main(int argc, char ** argv) {
 
 /*************************************************************/
 
-   printf("%%%% [ HH_A2VRL_V2Q  ] m = %4d; n = %4d; ",m,n);
+   printf("%%%% [ HH_A2VLL_V2Q  ] m = %4d; n = %4d; b = %4d; ",m,n,b);
    double(*tau) = malloc(sizeof(double[n]));
    for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i][j] = A[i][j];
    qr_householder_a2vll__tiled (m, n, b, Q, tau);
