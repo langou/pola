@@ -131,7 +131,7 @@ int main(int argc, char ** argv) {
       printf("%%%% [ HH_A2VLL_V2Q  ] m = %4d; n = %4d; ",m,n);
       double(*tau) = malloc(sizeof(double[n]));
       for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i][j] = A[i][j];
-      qr_householder_a2vrl (m, n, Q, tau);
+      qr_householder_a2vll (m, n, Q, tau);
       for(i = 0; i < n; i++) for(j = i; j < n; j++) R[i][j] = Q[i][j];
       qr_householder_v2q (m, n, Q, tau);
       free(tau);
@@ -141,7 +141,7 @@ int main(int argc, char ** argv) {
       printf("%%%% [ HH_A2VRL_V2Q  ] m = %4d; n = %4d; ",m,n);
       double(*tau) = malloc(sizeof(double[n]));
       for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i][j] = A[i][j];
-      qr_householder_a2vll (m, n, Q, tau);
+      qr_householder_a2vrl (m, n, Q, tau);
       for(i = 0; i < n; i++) for(j = i; j < n; j++) R[i][j] = Q[i][j];
       qr_householder_v2q (m, n, Q, tau);
       free(tau);

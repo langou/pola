@@ -1,9 +1,10 @@
 #include <math.h>
 
-void qr_householder_a2vll ( int M, int N, double A[M][N], double tau[N] )
+void qr_householder_a2vll__tiled ( int M, int N, int B, double A[M][N], double tau[N] )
 {
   int i, j, k;
-  double norma2, norma, tmp;
+  double norma2, norma;
+  double tmp;
 
 #pragma scop
 for(k = 0; k < N; k++){
