@@ -5,7 +5,7 @@
 
 void qr_mgs_rl__tiled_blas (int m, int n, int b, double *A, int lda, double *R, int ldr )
 {
-int i, j, k;
+int i, j;
 int i0;
 
 // the coefficients of R are computed, used only once and right after
@@ -32,11 +32,8 @@ for (i0 = 0; i0 < n; i0+=b) {
    for (j = i0+b; j < n; j++) {
 //    read A(1:M,j)
       for (i = i0; ((i < i0+b)&&(i < n)); i++) {
-         R[i+j*ldr] = 0.0e+00;
-         for (k = 0; k < m; k++)
-            R[i+j*ldr] += A[k+i*lda] * A[k+j*lda];
-         for (k = 0; k < m; k++)
-            A[k+j*lda] -= A[k+i*lda] * R[i+j*ldr];
+         R[i+j*ldr] = cblas_ddot( m, &(A[i*lda]), 1, &(A[j*lda]), 1 );
+         cblas_daxpy( m, -R[i+j*ldr], &(A[i*lda]), 1, &(A[j*lda]), 1 );
       }
 //    write A(1:M,j)
    }
