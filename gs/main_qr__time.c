@@ -11,6 +11,7 @@
 #define MGS_RL_BLAS         105
 #define MGS_RL__TILED       205
 #define MGS_RL__TILED_BLAS  305
+#define MGS_REC_BLAS        106
 #define UNKNOWN             999
 
 extern void qr_mgs_ll             ( int m, int n, double *A, int lda, double *R, int ldr );
@@ -21,6 +22,7 @@ extern void qr_mgs_ll__tiled      ( int m, int n, int b, double *A, int lda, dou
 extern void qr_mgs_rl__tiled      ( int m, int n, int b, double *A, int lda, double *R, int ldr );
 extern void qr_mgs_ll__tiled_blas ( int m, int n, int b, double *A, int lda, double *R, int ldr );
 extern void qr_mgs_rl__tiled_blas ( int m, int n, int b, double *A, int lda, double *R, int ldr );
+extern void qr_mgs_rec_blas       ( int m, int n, double *A, int lda, double *R, int ldr );
 
 
 extern double check_qr_repres( int m, int n, double *A, int lda, double *Q, int ldq, double *R, int ldr );
@@ -68,6 +70,8 @@ int main(int argc, char ** argv) {
            method = MGS_LL__TILED_BLAS;
          else if( strcmp( *(argv + i + 1), "mgs_rl__tiled_blas") == 0)
            method = MGS_RL__TILED_BLAS;
+         else if( strcmp( *(argv + i + 1), "mgs_rec_blas") == 0)
+           method = MGS_REC_BLAS;
 	 else 
            method = UNKNOWN;
          i++;
@@ -142,6 +146,12 @@ int main(int argc, char ** argv) {
       printf("%%%% [ MGS_RL__TILED_BLAS   ] m = %4d; n = %4d; b = %4d; ",m,n,b);
       for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
       qr_mgs_rl__tiled_blas (m, n, b, Q, ldq, R, ldr);
+   }
+
+   if ( method == MGS_REC_BLAS ) { 
+      printf("%%%% [ MGS_REC_BLAS         ] m = %4d; n = %4d;          ",m,n);
+      for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
+      qr_mgs_rec_blas (m, n, Q, ldq, R, ldr);
    }
 
 /*************************************************************/
