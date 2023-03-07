@@ -8,12 +8,19 @@
 #define MGS_LL__TILED       204
 #define MGS_LL__TILED_BLAS  304
 #define MGS_RL                5
+#define MGS_RL_BLAS         105
+#define MGS_RL__TILED       205
+#define MGS_RL__TILED_BLAS  305
 #define UNKNOWN             999
 
-extern void qr_mgs_ll             ( int m, int n, double *Q, int ldq, double *R, int ldr );
-extern void qr_mgs_ll_blas        ( int m, int n, double *Q, int ldq, double *R, int ldr );
-extern void qr_mgs_ll__tiled      (int m, int n, int b, double *A, int lda, double *R, int ldr );
-extern void qr_mgs_ll__tiled_blas (int m, int n, int b, double *A, int lda, double *R, int ldr );
+extern void qr_mgs_ll             ( int m, int n, double *A, int lda, double *R, int ldr );
+extern void qr_mgs_rl             ( int m, int n, double *A, int lda, double *R, int ldr );
+extern void qr_mgs_ll_blas        ( int m, int n, double *A, int lda, double *R, int ldr );
+extern void qr_mgs_rl_blas        ( int m, int n, double *A, int lda, double *R, int ldr );
+extern void qr_mgs_ll__tiled      ( int m, int n, int b, double *A, int lda, double *R, int ldr );
+extern void qr_mgs_rl__tiled      ( int m, int n, int b, double *A, int lda, double *R, int ldr );
+extern void qr_mgs_ll__tiled_blas ( int m, int n, int b, double *A, int lda, double *R, int ldr );
+extern void qr_mgs_rl__tiled_blas ( int m, int n, int b, double *A, int lda, double *R, int ldr );
 
 
 extern double check_qr_repres( int m, int n, double *A, int lda, double *Q, int ldq, double *R, int ldr );
@@ -47,12 +54,20 @@ int main(int argc, char ** argv) {
       if( strcmp( *(argv + i), "-method") == 0) {
          if( strcmp( *(argv + i + 1), "mgs_ll") == 0)
            method = MGS_LL;
+         else if( strcmp( *(argv + i + 1), "mgs_rl") == 0)
+           method = MGS_RL;
          else if( strcmp( *(argv + i + 1), "mgs_ll_blas") == 0)
            method = MGS_LL_BLAS;
+         else if( strcmp( *(argv + i + 1), "mgs_rl_blas") == 0)
+           method = MGS_RL_BLAS;
          else if( strcmp( *(argv + i + 1), "mgs_ll__tiled") == 0)
            method = MGS_LL__TILED;
+         else if( strcmp( *(argv + i + 1), "mgs_rl__tiled") == 0)
+           method = MGS_RL__TILED;
          else if( strcmp( *(argv + i + 1), "mgs_ll__tiled_blas") == 0)
            method = MGS_LL__TILED_BLAS;
+         else if( strcmp( *(argv + i + 1), "mgs_rl__tiled_blas") == 0)
+           method = MGS_RL__TILED_BLAS;
 	 else 
            method = UNKNOWN;
          i++;
@@ -87,10 +102,22 @@ int main(int argc, char ** argv) {
       qr_mgs_ll (m, n, Q, ldq, R, ldr);
    }
 
+   if ( method == MGS_RL ) { 
+      printf("%%%% [ MGS_RL               ] m = %4d; n = %4d;          ",m,n);
+      for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
+      qr_mgs_rl (m, n, Q, ldq, R, ldr);
+   }
+
    if ( method == MGS_LL_BLAS ) { 
       printf("%%%% [ MGS_LL_BLAS          ] m = %4d; n = %4d;          ",m,n);
       for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
       qr_mgs_ll_blas (m, n, Q, ldq, R, ldr);
+   }
+
+   if ( method == MGS_RL_BLAS ) { 
+      printf("%%%% [ MGS_RL_BLAS          ] m = %4d; n = %4d;          ",m,n);
+      for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
+      qr_mgs_rl_blas (m, n, Q, ldq, R, ldr);
    }
 
    if ( method == MGS_LL__TILED ) { 
@@ -99,10 +126,22 @@ int main(int argc, char ** argv) {
       qr_mgs_ll__tiled (m, n, b, Q, ldq, R, ldr);
    }
 
+   if ( method == MGS_RL__TILED ) { 
+      printf("%%%% [ MGS_RL__TILED        ] m = %4d; n = %4d; b = %4d; ",m,n,b);
+      for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
+      qr_mgs_rl__tiled (m, n, b, Q, ldq, R, ldr);
+   }
+
    if ( method == MGS_LL__TILED_BLAS ) { 
       printf("%%%% [ MGS_LL__TILED_BLAS   ] m = %4d; n = %4d; b = %4d; ",m,n,b);
       for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
       qr_mgs_ll__tiled_blas (m, n, b, Q, ldq, R, ldr);
+   }
+
+   if ( method == MGS_RL__TILED_BLAS ) { 
+      printf("%%%% [ MGS_RL__TILED_BLAS   ] m = %4d; n = %4d; b = %4d; ",m,n,b);
+      for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
+      qr_mgs_rl__tiled_blas (m, n, b, Q, ldq, R, ldr);
    }
 
 /*************************************************************/
