@@ -17,7 +17,9 @@ extern void qr_householder_a2vll__tiled_blas ( int M, int N, int B, double *A, i
 extern void qr_householder_v2q ( int M, int N, double *A, int lda, double *tau );
 
 extern double check_qr_repres( int m, int n, double *A, int lda, double *Q, int ldq, double *R, int ldr );
+extern double check_qr_repres_blas( int m, int n, double *A, int lda, double *Q, int ldq, double *R, int ldr );
 extern double check_orthog( int m, int n, double *Q, int ldq );
+extern double check_orthog_blas( int m, int n, double *Q, int ldq );
 
 
 int main(int argc, char ** argv) {
@@ -102,9 +104,10 @@ int main(int argc, char ** argv) {
 
 /*************************************************************/
 
-   printf("repres = %8.1e; ", check_qr_repres( m, n, A, lda, Q, ldq, R, ldr ));
+   printf("repres = %8.1e; ", check_qr_repres_blas( m, n, A, lda, Q, ldq, R, ldr ));
 
-   printf("orth = %8.1e;\n", check_orthog( m, n, Q, ldq ));
+   //printf("orth = %8.1e;\n", check_orthog( m, n, Q, ldq ));
+   printf("orth = %8.1e;\n", check_orthog_blas( m, n, Q, ldq ));
 
    free( R );
    free( Q );
