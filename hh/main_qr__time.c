@@ -97,8 +97,8 @@ int main(int argc, char ** argv) {
    if ( method == HH_A2VLL__TILED_BLAS ) qr_householder_a2vll__tiled_blas (m, n, b, Q, ldq, tau);
 
    for(i = 0; i < n; i++) for(j = i; j < n; j++) R[i+j*ldr] = Q[i+j*ldq];;
-   qr_householder_v2q (m, n, Q, ldq, tau);
-   //LAPACKE_dorgqr( LAPACK_COL_MAJOR, m, n, n, Q, ldq, tau );
+   //qr_householder_v2q (m, n, Q, ldq, tau);
+   LAPACKE_dorgqr( LAPACK_COL_MAJOR, m, n, n, Q, ldq, tau );
 
    free(tau);
 
