@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
+#include <papi/timing.h>
 
 #define MGS_LL                4
 #define MGS_LL_BLAS         104
@@ -87,6 +88,15 @@ int main(int argc, char ** argv) {
    if ( m < n ) { printf("m < n is not OK. m = %d and n= %d. quick return.\n", m, n ); return -1; }
 
    if ( method == UNKNOWN ) { printf("method is UNKNOWN. quick return.\n"); return -1; }
+
+   // Initializing PAPI and preparing the data structure for the result
+   init_papi();
+   papi_info_t papi_info = build_papi_info();
+    
+   // To store the results of the counter
+   size_t num_events = papi_info.num_events;
+   long long results [num_events];
+
 
    lda = m; 
    ldq = m;
@@ -175,6 +185,7 @@ int main(int argc, char ** argv) {
 
    struct timespec start, end;
    clock_gettime(CLOCK_MONOTONIC, &start);
+   record_events(papi_info);
 
    if ( method == MGS_LL ) { 
       qr_mgs_ll (m, n, Q, ldq, R, ldr);
@@ -212,17 +223,22 @@ int main(int argc, char ** argv) {
       qr_mgs_rec_blas (m, n, Q, ldq, R, ldr);
    }
 
+   retrieve_results(papi_info, results);
    clock_gettime(CLOCK_MONOTONIC, &end);
 
 /*************************************************************/
+
+   double cycles = (double) results[CYCLES];
+   double l1miss = results[CACHE_MISS_L1];
+   double l2miss = results[CACHE_MISS_L2];
 
    double time_taken;
    time_taken = end.tv_sec - start.tv_sec;
    time_taken = time_taken + (end.tv_nsec - start.tv_nsec) * 1e-9;
    if(human_readable)
-     printf("time = %.5g; ", time_taken);
+     printf("time = %.5g; cycles = %.5g; L1 miss = %.5g; L2 miss = %.5g ", time_taken, cycles, l1miss, l2miss);
    else
-     printf(" %.5g ", time_taken);
+     printf(" %.5g %.5g %.5g %.5g ", time_taken, cycles, l1miss, l2miss);
 
    // printf("repres = %8.1e; ", check_qr_repres( m, n, A, lda, Q, ldq, R, ldr ));
 
