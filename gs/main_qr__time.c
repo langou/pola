@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 
 #define MGS_LL                4
 #define MGS_LL_BLAS         104
@@ -32,12 +33,14 @@ extern double check_orthog( int m, int n, double *Q, int ldq );
 int main(int argc, char ** argv) {
 
    int b, i, j, m, n;
+   int human_readable;
    int lda, ldq, ldr;
    int method;
 
    m = 10;
    n = 8;
    b = 3;
+   human_readable = 0;
    method = MGS_LL;
 
    for(i = 1; i < argc; i++){
@@ -52,6 +55,9 @@ int main(int argc, char ** argv) {
       if( strcmp( *(argv + i), "-b") == 0) {
          b = atoi( *(argv + i + 1) );
          i++;
+      }
+      if( strcmp( *(argv + i), "-h") == 0) {
+	human_readable = 1;
       }
       if( strcmp( *(argv + i), "-method") == 0) {
          if( strcmp( *(argv + i + 1), "mgs_ll") == 0)
@@ -100,52 +106,78 @@ int main(int argc, char ** argv) {
 
 /*************************************************************/
 
+   struct timespec start, end;
+   clock_gettime(CLOCK_MONOTONIC, &start);
+
    if ( method == MGS_LL ) { 
-      printf("%%%% [ MGS_LL               ] m = %4d; n = %4d;          ",m,n);
-      for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
+     if(human_readable)
+       printf("%%%% [ MGS_LL               ] m = %4d; n = %4d;          ",m,n);
+     else
+       printf("MGS_LL %4d %4d N/A",m,n);
       qr_mgs_ll (m, n, Q, ldq, R, ldr);
    }
 
    if ( method == MGS_RL ) { 
-      printf("%%%% [ MGS_RL               ] m = %4d; n = %4d;          ",m,n);
-      for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
-      qr_mgs_rl (m, n, Q, ldq, R, ldr);
+     if(human_readable)
+       printf("%%%% [ MGS_RL               ] m = %4d; n = %4d;          ",m,n);
+     else
+       printf("MGS_RL %4d %4d N/A",m,n);
+     for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
+     qr_mgs_rl (m, n, Q, ldq, R, ldr);
    }
 
    if ( method == MGS_LL_BLAS ) { 
-      printf("%%%% [ MGS_LL_BLAS          ] m = %4d; n = %4d;          ",m,n);
-      for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
-      qr_mgs_ll_blas (m, n, Q, ldq, R, ldr);
+     if(human_readable)
+       printf("%%%% [ MGS_LL_BLAS          ] m = %4d; n = %4d;          ",m,n);
+     else
+       printf("MGS_LL_BLAS %4d %4d N/A",m,n);
+     for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
+     qr_mgs_ll_blas (m, n, Q, ldq, R, ldr);
    }
 
    if ( method == MGS_RL_BLAS ) { 
-      printf("%%%% [ MGS_RL_BLAS          ] m = %4d; n = %4d;          ",m,n);
-      for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
-      qr_mgs_rl_blas (m, n, Q, ldq, R, ldr);
+     if(human_readable)
+       printf("%%%% [ MGS_RL_BLAS          ] m = %4d; n = %4d;          ",m,n);
+     else
+       printf("MGS_RL_BLAS %4d %4d N/A",m,n);
+     for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
+     qr_mgs_rl_blas (m, n, Q, ldq, R, ldr);
    }
 
    if ( method == MGS_LL__TILED ) { 
-      printf("%%%% [ MGS_LL__TILED        ] m = %4d; n = %4d; b = %4d; ",m,n,b);
-      for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
-      qr_mgs_ll__tiled (m, n, b, Q, ldq, R, ldr);
+     if(human_readable)
+       printf("%%%% [ MGS_LL__TILED        ] m = %4d; n = %4d; b = %4d; ",m,n,b);
+     else
+       printf("MGS_LL_TILED %4d %4d %4d",m,n,b);
+     for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
+     qr_mgs_ll__tiled (m, n, b, Q, ldq, R, ldr);
    }
 
    if ( method == MGS_RL__TILED ) { 
-      printf("%%%% [ MGS_RL__TILED        ] m = %4d; n = %4d; b = %4d; ",m,n,b);
-      for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
-      qr_mgs_rl__tiled (m, n, b, Q, ldq, R, ldr);
+     if(human_readable)
+       printf("%%%% [ MGS_RL__TILED        ] m = %4d; n = %4d; b = %4d; ",m,n,b);
+     else
+       printf("MGS_RL_TILED %4d %4d %4d",m,n,b);
+     for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
+     qr_mgs_rl__tiled (m, n, b, Q, ldq, R, ldr);
    }
 
    if ( method == MGS_LL__TILED_BLAS ) { 
-      printf("%%%% [ MGS_LL__TILED_BLAS   ] m = %4d; n = %4d; b = %4d; ",m,n,b);
-      for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
-      qr_mgs_ll__tiled_blas (m, n, b, Q, ldq, R, ldr);
+     if(human_readable)
+       printf("%%%% [ MGS_LL_TILED_BLAS   ] m = %4d; n = %4d; b = %4d; ",m,n,b);
+     else
+       printf("MGS_LL_TILED_BLAS %4d %4d %4d",m,n,b);
+     for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
+     qr_mgs_ll__tiled_blas (m, n, b, Q, ldq, R, ldr);
    }
 
    if ( method == MGS_RL__TILED_BLAS ) { 
-      printf("%%%% [ MGS_RL__TILED_BLAS   ] m = %4d; n = %4d; b = %4d; ",m,n,b);
-      for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
-      qr_mgs_rl__tiled_blas (m, n, b, Q, ldq, R, ldr);
+     if(human_readable)
+       printf("%%%% [ MGS_RL__TILED_BLAS   ] m = %4d; n = %4d; b = %4d; ",m,n,b);
+     else
+       printf("MGS_RL_TILED_BLAS %4d %4d %4d",m,n,b);
+     for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
+     qr_mgs_rl__tiled_blas (m, n, b, Q, ldq, R, ldr);
    }
 
    if ( method == MGS_REC_BLAS ) { 
@@ -154,12 +186,23 @@ int main(int argc, char ** argv) {
       qr_mgs_rec_blas (m, n, Q, ldq, R, ldr);
    }
 
+   clock_gettime(CLOCK_MONOTONIC, &end);
+
 /*************************************************************/
 
-   printf("repres = %8.1e; ", check_qr_repres( m, n, A, lda, Q, ldq, R, ldr ));
+   double time_taken;
+   time_taken = end.tv_sec - start.tv_sec;
+   time_taken = time_taken + (end.tv_nsec - start.tv_nsec) * 1e-9;
+   if(human_readable)
+     printf("time = %.5g; ", time_taken);
+   else
+     printf(" %.5g ", time_taken);
 
-   printf("orth = %8.1e;\n", check_orthog( m, n, Q, ldq ));
+   // printf("repres = %8.1e; ", check_qr_repres( m, n, A, lda, Q, ldq, R, ldr ));
 
+   // printf("orth = %8.1e; ", check_orthog( m, n, Q, ldq ));
+
+   printf("\n");
    free( R );
    free( Q );
    free( A );
