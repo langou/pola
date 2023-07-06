@@ -106,6 +106,8 @@ int main(int argc, char ** argv) {
 
 /*************************************************************/
 
+   for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
+
    struct timespec start, end;
    clock_gettime(CLOCK_MONOTONIC, &start);
 
@@ -122,7 +124,6 @@ int main(int argc, char ** argv) {
        printf("%%%% [ MGS_RL               ] m = %4d; n = %4d;          ",m,n);
      else
        printf("MGS_RL %4d %4d N/A",m,n);
-     for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
      qr_mgs_rl (m, n, Q, ldq, R, ldr);
    }
 
@@ -131,7 +132,6 @@ int main(int argc, char ** argv) {
        printf("%%%% [ MGS_LL_BLAS          ] m = %4d; n = %4d;          ",m,n);
      else
        printf("MGS_LL_BLAS %4d %4d N/A",m,n);
-     for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
      qr_mgs_ll_blas (m, n, Q, ldq, R, ldr);
    }
 
@@ -140,7 +140,6 @@ int main(int argc, char ** argv) {
        printf("%%%% [ MGS_RL_BLAS          ] m = %4d; n = %4d;          ",m,n);
      else
        printf("MGS_RL_BLAS %4d %4d N/A",m,n);
-     for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
      qr_mgs_rl_blas (m, n, Q, ldq, R, ldr);
    }
 
@@ -149,7 +148,6 @@ int main(int argc, char ** argv) {
        printf("%%%% [ MGS_LL__TILED        ] m = %4d; n = %4d; b = %4d; ",m,n,b);
      else
        printf("MGS_LL_TILED %4d %4d %4d",m,n,b);
-     for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
      qr_mgs_ll__tiled (m, n, b, Q, ldq, R, ldr);
    }
 
@@ -158,7 +156,6 @@ int main(int argc, char ** argv) {
        printf("%%%% [ MGS_RL__TILED        ] m = %4d; n = %4d; b = %4d; ",m,n,b);
      else
        printf("MGS_RL_TILED %4d %4d %4d",m,n,b);
-     for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
      qr_mgs_rl__tiled (m, n, b, Q, ldq, R, ldr);
    }
 
@@ -167,7 +164,6 @@ int main(int argc, char ** argv) {
        printf("%%%% [ MGS_LL_TILED_BLAS   ] m = %4d; n = %4d; b = %4d; ",m,n,b);
      else
        printf("MGS_LL_TILED_BLAS %4d %4d %4d",m,n,b);
-     for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
      qr_mgs_ll__tiled_blas (m, n, b, Q, ldq, R, ldr);
    }
 
@@ -176,13 +172,11 @@ int main(int argc, char ** argv) {
        printf("%%%% [ MGS_RL__TILED_BLAS   ] m = %4d; n = %4d; b = %4d; ",m,n,b);
      else
        printf("MGS_RL_TILED_BLAS %4d %4d %4d",m,n,b);
-     for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
      qr_mgs_rl__tiled_blas (m, n, b, Q, ldq, R, ldr);
    }
 
    if ( method == MGS_REC_BLAS ) { 
       printf("%%%% [ MGS_REC_BLAS         ] m = %4d; n = %4d;          ",m,n);
-      for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
       qr_mgs_rec_blas (m, n, Q, ldq, R, ldr);
    }
 
