@@ -1,8 +1,9 @@
 CC = gcc
-CCFLAGS = -Wall -Wno-unknown-pragmas
+CCFLAGS = -Wall -Wno-unknown-pragmas -O3
 LDFLAGS = -lm
-CBLAS_INCLUDE = /Users/langou/Documents/repositories/lapack.git/CBLAS/include/
-CBLAS_LIB = /Users/langou/Documents/repositories/lapack.git/libcblas.a /Users/langou/Documents/repositories/lapack.git/librefblas.a
+CBLAS_INCLUDE = ${MKLROOT}/include/
+CBLAS_LIB = -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_sequential.a ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lpthread -lm -ldl
+
 
 
 all: main_qr__time.exe
