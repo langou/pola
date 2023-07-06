@@ -253,6 +253,9 @@ int main(int argc, char ** argv) {
    time_taken = time_taken + (end.tv_nsec - start.tv_nsec) * 1e-9;
    
    if(human_readable) {
+     printf("repres = %8.1e; ", check_qr_repres( m, n, A, lda, Q, ldq, R, ldr ));
+     printf("orth = %8.1e; ", check_orthog( m, n, Q, ldq ));
+
      printf("time = %.5g; ", time_taken);
      if (use_papi) 
        printf("cycles = %.5g; L1 miss = %.5g; L2 miss = %.5g ", cycles, l1miss, l2miss);
@@ -265,9 +268,6 @@ int main(int argc, char ** argv) {
        printf(" N/A N/A N/A ");
    }
 
-   // printf("repres = %8.1e; ", check_qr_repres( m, n, A, lda, Q, ldq, R, ldr ));
-
-   // printf("orth = %8.1e; ", check_orthog( m, n, Q, ldq ));
 
    printf("\n");
    free( R );
