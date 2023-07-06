@@ -38,6 +38,7 @@ int main(int argc, char ** argv) {
 
    int b, i, j, lwork, m, n;
    int human_readable;
+   int use_papi;
    int lda, ldq, ldr;
    int method;
    double *A, *Q, *R, *tau, *work;
@@ -46,6 +47,7 @@ int main(int argc, char ** argv) {
    n = 8;
    b = 3;
    human_readable = 0;
+   use_papi = 1;
    method = HH_A2V_LL____________ ;
 
    for(i = 1; i < argc; i++){
@@ -63,6 +65,9 @@ int main(int argc, char ** argv) {
       }
       if( strcmp( *(argv + i), "-h") == 0) {
 	human_readable = 1;
+      }
+      if( strcmp( *(argv + i), "-np") == 0) {
+	use_papi = 0;
       }
      if( strcmp( *(argv + i), "-method") == 0) {
          if( strcmp( *(argv + i + 1), "hh_a2v_rl") == 0)
@@ -98,11 +103,17 @@ int main(int argc, char ** argv) {
    if ( method == UNKNOWN ) { printf("method is UNKNOWN -- quick return.\n"); return -1; }
 
    // Initializing PAPI and preparing the data structure for the result
-   init_papi();
-   papi_info_t papi_info = build_papi_info();
-    
+   papi_info_t papi_info;
+   
    // To store the results of the counter
-   size_t num_events = papi_info.num_events;
+   size_t num_events = 0;
+
+   if(use_papi) {
+     init_papi();
+     papi_info = build_papi_info();
+     num_events = papi_info.num_events;
+   }
+
    long long results [num_events];
 
    lda = m; 
@@ -165,7 +176,8 @@ int main(int argc, char ** argv) {
 
    struct timespec start, end;
    clock_gettime(CLOCK_MONOTONIC, &start);
-   record_events(papi_info);
+   if (use_papi)
+     record_events(papi_info);
 
    if ( method == HH_A2V_REC_______BLAS ) qr_householder_a2v_rec_______blas (m, n, Q, ldq, tau);
    if ( method == HH_A2V_RL____________ ) qr_householder_a2v_rl____________ (m, n, Q, ldq, tau);
@@ -179,7 +191,8 @@ int main(int argc, char ** argv) {
    if ( method == GEQR2 )                 LAPACKE_dgeqr2_work( LAPACK_COL_MAJOR, m, n, Q, ldq, tau, work );
    if ( method == GEQRF )                 LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, n, Q, ldq, tau, work, lwork );
 
-   retrieve_results(papi_info, results);
+   if (use_papi)
+     retrieve_results(papi_info, results);
    clock_gettime(CLOCK_MONOTONIC, &end);
 
 /*************************************************************/
@@ -193,9 +206,12 @@ int main(int argc, char ** argv) {
 
    free(tau);
 
-   double cycles = (double) results[CYCLES];
-   double l1miss = results[CACHE_MISS_L1];
-   double l2miss = results[CACHE_MISS_L2];
+   double cycles, l1miss, l2miss = 0;
+   if (use_papi) {
+     cycles = (double) results[CYCLES];
+     l1miss = results[CACHE_MISS_L1];
+     l2miss = results[CACHE_MISS_L2];
+   }
 
    double time_taken;
    time_taken = end.tv_sec - start.tv_sec;
@@ -205,9 +221,15 @@ int main(int argc, char ** argv) {
      printf("repres = %8.1e; ", check_qr_repres_blas( m, n, A, lda, Q, ldq, R, ldr ));
 
      printf("orth = %8.1e;", check_orthog_blas( m, n, Q, ldq ));
-     printf("time = %.5g; cycles = %.5g; L1 miss = %.5g; L2 miss = %.5g ", time_taken, cycles, l1miss, l2miss);
+     printf("time = %.5g; ", time_taken);
+     if (use_papi) 
+       printf("cycles = %.5g; L1 miss = %.5g; L2 miss = %.5g ", cycles, l1miss, l2miss);
    } else {
-     printf(" %.5g %.5g %.5g %.5g ", time_taken, cycles, l1miss, l2miss);
+     printf(" %.5g ", time_taken);
+     if (use_papi) 
+       printf(" %.5g %.5g %.5g ", cycles, l1miss, l2miss);
+     else 
+       printf(" N/A N/A N/A ");
    }
 
    printf("\n");
