@@ -3,6 +3,8 @@
 #include <string.h>
 #include <math.h>
 #include "lapacke.h"
+#include <time.h>
+#include <papi/timing.h>
 
 #define HH_V2Q_RL____________   6
 #define HH_V2Q_LL____________   7
@@ -97,6 +99,14 @@ int main(int argc, char ** argv) {
 
    if ( method == UNKNOWN ) { printf("method is UNKNOWN -- quick return.\n"); return -1; }
 
+   // Initializing PAPI and preparing the data structure for the result
+   init_papi();
+   papi_info_t papi_info = build_papi_info();
+    
+   // To store the results of the counter
+   size_t num_events = papi_info.num_events;
+   long long results [num_events];
+
    lda = m; 
    ldq = m;
    ldr = n;
@@ -158,6 +168,11 @@ int main(int argc, char ** argv) {
    for(i = 0; i < n; i++) for(j = i; j < n; j++) Q[i+j*ldq] = 0./0.;
 
 /*************************************************************/
+
+   struct timespec start, end;
+   clock_gettime(CLOCK_MONOTONIC, &start);
+   record_events(papi_info);
+
    if ( method == HH_V2Q_RL____________ ) qr_householder_v2q_rl____________ (m, n, Q, ldq, tau);
    if ( method == HH_V2Q_RL________BLAS ) qr_householder_v2q_rl________blas (m, n, Q, ldq, tau);
    if ( method == HH_V2Q_REC_______BLAS ) qr_householder_v2q_rec_______blas (m, n, Q, ldq, tau);
@@ -169,6 +184,10 @@ int main(int argc, char ** argv) {
    if ( method == HH_V2Q_RL__TILED_BLAS ) qr_householder_v2q_rl__tiled_blas (m, n, b, Q, ldq, tau);
    if ( method == ORG2R    )              dorg2r_( &m, &n, &n, Q, &ldq, tau, work, &i );
    if ( method == ORGQR    )              LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, m, n, n, Q, ldq, tau, work, lwork );
+
+   retrieve_results(papi_info, results);
+   clock_gettime(CLOCK_MONOTONIC, &end);
+
 /*************************************************************/
 
    if ( method == ORGQR ) free(work);
@@ -176,10 +195,21 @@ int main(int argc, char ** argv) {
 
    free(tau);
 
+   double cycles = (double) results[CYCLES];
+   double l1miss = results[CACHE_MISS_L1];
+   double l2miss = results[CACHE_MISS_L2];
+
+   double time_taken;
+   time_taken = end.tv_sec - start.tv_sec;
+   time_taken = time_taken + (end.tv_nsec - start.tv_nsec) * 1e-9;
+
    if (human_readable) {
      printf("repres = %8.1e; ", check_qr_repres_blas( m, n, A, lda, Q, ldq, R, ldr ));
 
      printf("orth = %8.1e;", check_orthog_blas( m, n, Q, ldq ));
+     printf("time = %.5g; cycles = %.5g; L1 miss = %.5g; L2 miss = %.5g ", time_taken, cycles, l1miss, l2miss);
+   } else {
+     printf(" %.5g %.5g %.5g %.5g ", time_taken, cycles, l1miss, l2miss);
    }
 
    printf("\n");
