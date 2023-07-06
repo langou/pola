@@ -1,5 +1,5 @@
 CC = gcc
-CCFLAGS = -Wall -Wno-unknown-pragmas -static-libgcc -lgcc 
+CCFLAGS = -Wall -Wno-unknown-pragmas -static-libgcc -lgcc -O3 -march=native
 LDFLAGS = -lm -lgfortran
 CBLAS_INCLUDE = ${MKLROOT}/include/
 CBLAS_LIB = -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_sequential.a ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lpthread -lm -ldl
