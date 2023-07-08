@@ -15,7 +15,7 @@ double check_orthog_blas(int m, int n, double *Q, int ldq )
 
    normRES = 0.0e+00;
    for(j = 0; j < n; j++){
-      normRES += RES[i+j*n] * RES[i+j*n];
+      normRES += RES[j+j*n] * RES[j+j*n];
       for(i = j+1; i < n; i++){
          normRES += 2 * RES[i+j*n] * RES[i+j*n];
       }
