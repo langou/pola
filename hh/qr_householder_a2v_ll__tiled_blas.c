@@ -1,7 +1,7 @@
 #include <math.h>
 #include <cblas.h>
 
-void qr_householder_a2vll__tiled_blas ( int M, int N, int B, double *A, int lda, double *tau )
+void qr_householder_a2v_ll__tiled_blas ( int M, int N, int B, double *A, int lda, double *tau )
 {
   int j, k;
   double norma2, norma, tmp;

@@ -1,6 +1,6 @@
 #include <math.h>
 
-void qr_householder_a2vrl ( int M, int N, double *A, int lda, double *tau )
+void qr_householder_a2v_rl____________ ( int M, int N, double *A, int lda, double *tau )
 {
   int i, j, k;
   double norma2, norma, tmp;

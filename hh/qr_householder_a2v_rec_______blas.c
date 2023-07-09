@@ -1,7 +1,7 @@
 #include <math.h>
 #include <cblas.h>
 
-void qr_householder_a2v_rec_blas ( int m, int n, double *A, int lda, double *tau )
+void qr_householder_a2v_rec_______blas ( int m, int n, double *A, int lda, double *tau )
 {
    int j, k, n1, n2;
    double norma2, norma;
@@ -23,7 +23,7 @@ void qr_householder_a2v_rec_blas ( int m, int n, double *A, int lda, double *tau
       n1 = n / 2;
       n2 = n - n1;
 
-      qr_householder_a2v_rec_blas ( m, n1, A, lda, tau );
+      qr_householder_a2v_rec_______blas ( m, n1, A, lda, tau );
 
       for(k = 0; k < n1; k++){
 
@@ -41,7 +41,7 @@ void qr_householder_a2v_rec_blas ( int m, int n, double *A, int lda, double *tau
 
       }
 
-      qr_householder_a2v_rec_blas ( m-n1, n2, &(A[n1+n1*lda]), lda, &(tau[n1]) );
+      qr_householder_a2v_rec_______blas ( m-n1, n2, &(A[n1+n1*lda]), lda, &(tau[n1]) );
 
    }
 
