@@ -8,6 +8,7 @@
 #define HH_V2Q_LL____________   7
 #define HH_V2Q_RL________BLAS 106
 #define HH_V2Q_LL________BLAS 107
+#define HH_V2Q_REC_______BLAS 111
 #define HH_V2Q_LL__TILED_____ 207
 #define HH_V2Q_LL__TILED_BLAS 307
 #define ORG2R                 911
@@ -20,6 +21,7 @@ extern void qr_householder_v2q_ll____________ ( int M, int N, double *A, int lda
 extern void qr_householder_v2q_ll________blas ( int M, int N, double *A, int lda, double *tau );
 extern void qr_householder_v2q_ll__tiled_____ ( int M, int N, int B, double *A, int lda, double *tau );
 extern void qr_householder_v2q_ll__tiled_blas ( int M, int N, int B, double *A, int lda, double *tau );
+extern void qr_householder_v2q_rec_______blas ( int M, int N, double *A, int lda, double *tau );
 
 extern double check_qr_repres( int m, int n, double *A, int lda, double *Q, int ldq, double *R, int ldr );
 extern double check_qr_repres_blas( int m, int n, double *A, int lda, double *Q, int ldq, double *R, int ldr );
@@ -58,6 +60,8 @@ int main(int argc, char ** argv) {
            method = HH_V2Q_RL____________;
          else if( strcmp( *(argv + i + 1), "hh_v2q_rl_blas") == 0)
            method = HH_V2Q_RL________BLAS;
+         else if( strcmp( *(argv + i + 1), "hh_v2q_rec_blas") == 0)
+           method = HH_V2Q_REC_______BLAS;
          else if( strcmp( *(argv + i + 1), "hh_v2q_ll") == 0)
            method = HH_V2Q_LL____________;
          else if( strcmp( *(argv + i + 1), "hh_v2q_ll_blas") == 0)
@@ -109,6 +113,7 @@ int main(int argc, char ** argv) {
 
    if ( method == HH_V2Q_RL____________ )   printf("%%%% [ HH_V2Q_RL____________ ] m = %4d; n = %4d;           ",m,n);
    if ( method == HH_V2Q_RL________BLAS )   printf("%%%% [ HH_V2Q_RL________BLAS ] m = %4d; n = %4d;           ",m,n);
+   if ( method == HH_V2Q_REC_______BLAS )   printf("%%%% [ HH_V2Q_REC_______BLAS ] m = %4d; n = %4d;           ",m,n);
    if ( method == HH_V2Q_LL____________ )   printf("%%%% [ HH_V2Q_LL____________ ] m = %4d; n = %4d;           ",m,n);
    if ( method == HH_V2Q_LL________BLAS )   printf("%%%% [ HH_V2Q_LL________BLAS ] m = %4d; n = %4d;           ",m,n);
    if ( method == HH_V2Q_LL__TILED_____ )   printf("%%%% [ HH_V2Q_LL__TILED_____ ] m = %4d; n = %4d; b = %4d; ",m,n,b);
@@ -126,6 +131,7 @@ int main(int argc, char ** argv) {
 /*************************************************************/
    if ( method == HH_V2Q_RL____________ ) qr_householder_v2q_rl____________ (m, n, Q, ldq, tau);
    if ( method == HH_V2Q_RL________BLAS ) qr_householder_v2q_rl________blas (m, n, Q, ldq, tau);
+   if ( method == HH_V2Q_REC_______BLAS ) qr_householder_v2q_rec_______blas (m, n, Q, ldq, tau);
    if ( method == HH_V2Q_LL____________ ) qr_householder_v2q_ll____________ (m, n, Q, ldq, tau);
    if ( method == HH_V2Q_LL________BLAS ) qr_householder_v2q_ll________blas (m, n, Q, ldq, tau);
    if ( method == HH_V2Q_LL__TILED_____ ) qr_householder_v2q_ll__tiled_____ (m, n, b, Q, ldq, tau);
