@@ -36,7 +36,10 @@ for(k = N-1; k > -1; k--){
          A[i+lda*k] -= A[i+lda*j] * tmp;
 
       }
+
    }
+
 }
+
 #pragma endscop
 }
