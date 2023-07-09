@@ -8,6 +8,7 @@
 #define HH_V2QLL                7
 #define HH_V2QLL_BLAS         107
 #define HH_V2QLL_TILED        207
+#define HH_V2QLL_TILED_BLAS   307
 #define ORG2R                 911
 #define ORGQR                 912
 #define UNKNOWN               999
@@ -16,6 +17,7 @@ extern void qr_householder_v2qrl ( int M, int N, double *A, int lda, double *tau
 extern void qr_householder_v2qll ( int M, int N, double *A, int lda, double *tau );
 extern void qr_householder_v2qll_blas ( int M, int N, double *A, int lda, double *tau );
 extern void qr_householder_v2qll__tiled ( int M, int N, int B, double *A, int lda, double *tau );
+extern void qr_householder_v2qll__tiled_blas ( int M, int N, int B, double *A, int lda, double *tau );
 
 extern double check_qr_repres( int m, int n, double *A, int lda, double *Q, int ldq, double *R, int ldr );
 extern double check_qr_repres_blas( int m, int n, double *A, int lda, double *Q, int ldq, double *R, int ldr );
@@ -58,6 +60,8 @@ int main(int argc, char ** argv) {
            method = HH_V2QLL_BLAS;
          else if( strcmp( *(argv + i + 1), "hh_v2qll_tiled") == 0)
            method = HH_V2QLL_TILED;
+         else if( strcmp( *(argv + i + 1), "hh_v2qll_tiled_blas") == 0)
+           method = HH_V2QLL_TILED_BLAS;
          else if( strcmp( *(argv + i + 1), "org2r") == 0)
            method = ORG2R;
          else if( strcmp( *(argv + i + 1), "orgqr") == 0)
@@ -99,12 +103,13 @@ int main(int argc, char ** argv) {
       work = (double *) malloc( n * sizeof(double));
    }
 
-   if ( method == HH_V2QRL       )        printf("%%%% [ HH_V2QRL              ] m = %4d; n = %4d;           ",m,n);
-   if ( method == HH_V2QLL       )        printf("%%%% [ HH_V2QLL              ] m = %4d; n = %4d;           ",m,n);
-   if ( method == HH_V2QLL_BLAS  )        printf("%%%% [ HH_V2QLL_BLAS         ] m = %4d; n = %4d;           ",m,n);
-   if ( method == HH_V2QLL_TILED )        printf("%%%% [ HH_V2QLL_TILED        ] m = %4d; n = %4d; b = %4d;  ",m,n,b);
-   if ( method == ORG2R          )        printf("%%%% [ ORG2R                 ] m = %4d; n = %4d;           ",m,n);
-   if ( method == ORGQR          )        printf("%%%% [ ORGQR                 ] m = %4d; n = %4d;           ",m,n);
+   if ( method == HH_V2QRL            )   printf("%%%% [ HH_V2QRL              ] m = %4d; n = %4d;           ",m,n);
+   if ( method == HH_V2QLL            )   printf("%%%% [ HH_V2QLL              ] m = %4d; n = %4d;           ",m,n);
+   if ( method == HH_V2QLL_BLAS       )   printf("%%%% [ HH_V2QLL_BLAS         ] m = %4d; n = %4d;           ",m,n);
+   if ( method == HH_V2QLL_TILED      )   printf("%%%% [ HH_V2QLL_TILED        ] m = %4d; n = %4d; b = %4d;  ",m,n,b);
+   if ( method == HH_V2QLL_TILED_BLAS )   printf("%%%% [ HH_V2QLL_TILED_BLAS   ] m = %4d; n = %4d; b = %4d;  ",m,n,b);
+   if ( method == ORG2R               )   printf("%%%% [ ORG2R                 ] m = %4d; n = %4d;           ",m,n);
+   if ( method == ORGQR               )   printf("%%%% [ ORGQR                 ] m = %4d; n = %4d;           ",m,n);
 
    for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
 
@@ -118,6 +123,7 @@ int main(int argc, char ** argv) {
    if ( method == HH_V2QLL )             qr_householder_v2qll (m, n, Q, ldq, tau);
    if ( method == HH_V2QLL_BLAS )        qr_householder_v2qll_blas (m, n, Q, ldq, tau);
    if ( method == HH_V2QLL_TILED )       qr_householder_v2qll__tiled (m, n, b, Q, ldq, tau);
+   if ( method == HH_V2QLL_TILED_BLAS )  qr_householder_v2qll__tiled_blas (m, n, b, Q, ldq, tau);
    if ( method == ORG2R    )             dorg2r_( &m, &n, &n, Q, &ldq, tau, work, &i );
    if ( method == ORGQR    )             LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, m, n, n, Q, ldq, tau, work, lwork );
 /*************************************************************/

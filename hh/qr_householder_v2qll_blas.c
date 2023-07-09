@@ -3,8 +3,8 @@
 
 void qr_householder_v2qll_blas ( int M, int N, double *A, int lda, double *tau )
 {
-  int j, k;
-  double tmp;
+   int j, k;
+   double tmp;
 
 #pragma scop
 
