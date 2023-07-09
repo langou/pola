@@ -24,7 +24,7 @@ for(k = 0; k < N; k++){
    
    tau[k] = 2.0 / ( 1.0 + norma2 / ( A[k+lda*k] * A[k+lda*k] ) ) ;
    
-   cblas_dscal( (M-j-1), 1.0/A[k+lda*k], &(A[(k+1)+k*lda]), 1 );
+   cblas_dscal( (M-k-1), 1.0/A[k+lda*k], &(A[(k+1)+k*lda]), 1 );
    A[k+lda*k]= ( A[k+lda*k] > 0 ) ? ( - norma ) : ( norma ) ;
    
 
