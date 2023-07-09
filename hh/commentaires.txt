@@ -1,0 +1,25 @@
+Des commentaires rapides sur les codes C:
+
+(*) pour DORG2R, il n’y a pas d’interface LAPACKE, donc peut etre que ça va
+merder du côté de Lionel. En gros j’appelle l’interface directement. Mais bon,
+ça marche sur ma machine. Je pense que ça doit marcher sur la tienne aussi.
+
+(*) La comparaison avec les codes LAPACK n’est pas à 100% correct dans le sens
+où LAPACK (1) fait des erreurs check, (2) a des routines de scaling plus
+stable, etc. C’est compliqué de mettre nos codes au niveau de LAPACK, je pense
+que c’est négligeable et que la comparaison est honnête. 
+
+(*) Pas mal de code que j’ai écrit utilise une ruse qui est d’utiliser le
+tableau ``tau`` comme un workspace. Je ne sais pas si je devrais faire cela. Il
+y a plusieurs problème. (1) Pour les algos V2Q, cela détruit l’interface
+puisque tau n’est plus ``input``, il devient ``input`` et ``garbage en
+output``. Pour les algos A2Q, c’est bon. (2) cette ruse ne marche que si N <=
+M. Bon on peut toujours soit alloué en petit workspace, soit le demander dans
+l’interface. Le demander dans l’interface est ce que LAPACK fait. C’est pour ça
+que il y a ``work`` dans DGEQR2, DORG2R, etc. En retrospect, j’aurai peut etre
+du utiliser ``work``.
+
+(*) Il y a plus de variants dans LAPACK pour GEQRF. Il y a DGEQR (qui appelle
+TSQR), DGEQRT3, etc. Compliqué de tout faire. Je pense que cela suffit pour le
+moment.
+

@@ -10,7 +10,9 @@
 #define HH_A2V_RL________BLAS 109
 #define HH_A2V_REC_______BLAS 110
 #define HH_A2V_LL__TILED_____ 208
+#define HH_A2V_RL__TILED_____ 209
 #define HH_A2V_LL__TILED_BLAS 308
+#define HH_A2V_RL__TILED_BLAS 309
 #define GEQR2                 901
 #define GEQRF                 902
 #define UNKNOWN               999
@@ -22,6 +24,8 @@ extern void qr_householder_a2v_ll____________ ( int M, int N, double *A, int lda
 extern void qr_householder_a2v_ll________blas ( int M, int N, double *A, int lda, double *tau );
 extern void qr_householder_a2v_ll__tiled_____ ( int M, int N, int B, double *A, int lda, double *tau );
 extern void qr_householder_a2v_ll__tiled_blas ( int M, int N, int B, double *A, int lda, double *tau );
+extern void qr_householder_a2v_rl__tiled_____ ( int M, int N, int B, double *A, int lda, double *tau );
+extern void qr_householder_a2v_rl__tiled_blas ( int M, int N, int B, double *A, int lda, double *tau );
 
 extern double check_qr_repres( int m, int n, double *A, int lda, double *Q, int ldq, double *R, int ldr );
 extern double check_qr_repres_blas( int m, int n, double *A, int lda, double *Q, int ldq, double *R, int ldr );
@@ -68,6 +72,10 @@ int main(int argc, char ** argv) {
            method = HH_A2V_LL__TILED_____;
          else if( strcmp( *(argv + i + 1), "hh_a2v_ll_tiled_blas") == 0)
            method = HH_A2V_LL__TILED_BLAS;
+         else if( strcmp( *(argv + i + 1), "hh_a2v_rl_tiled") == 0)
+           method = HH_A2V_RL__TILED_____;
+         else if( strcmp( *(argv + i + 1), "hh_a2v_rl_tiled_blas") == 0)
+           method = HH_A2V_RL__TILED_BLAS;
          else if( strcmp( *(argv + i + 1), "geqr2") == 0)
            method = GEQR2;
          else if( strcmp( *(argv + i + 1), "geqrf") == 0)
@@ -117,6 +125,8 @@ int main(int argc, char ** argv) {
    if ( method == HH_A2V_LL________BLAS ) printf("%%%% [ HH_A2V_LL________BLAS ] m = %4d; n = %4d;           ",m,n);
    if ( method == HH_A2V_LL__TILED_____ ) printf("%%%% [ HH_A2V_LL__TILED_____ ] m = %4d; n = %4d; b = %4d; ",m,n,b);
    if ( method == HH_A2V_LL__TILED_BLAS ) printf("%%%% [ HH_A2V_LL__TILED_BLAS ] m = %4d; n = %4d; b = %4d; ",m,n,b);
+   if ( method == HH_A2V_RL__TILED_____ ) printf("%%%% [ HH_A2V_RL__TILED_____ ] m = %4d; n = %4d; b = %4d; ",m,n,b);
+   if ( method == HH_A2V_RL__TILED_BLAS ) printf("%%%% [ HH_A2V_RL__TILED_BLAS ] m = %4d; n = %4d; b = %4d; ",m,n,b);
    if ( method == GEQR2         )         printf("%%%% [ GEQR2                 ] m = %4d; n = %4d;           ",m,n);
    if ( method == GEQRF         )         printf("%%%% [ GEQRF                 ] m = %4d; n = %4d;           ",m,n);
 
@@ -131,6 +141,8 @@ int main(int argc, char ** argv) {
    if ( method == HH_A2V_LL________BLAS ) qr_householder_a2v_ll________blas (m, n, Q, ldq, tau);
    if ( method == HH_A2V_LL__TILED_____ ) qr_householder_a2v_ll__tiled_____ (m, n, b, Q, ldq, tau);
    if ( method == HH_A2V_LL__TILED_BLAS ) qr_householder_a2v_ll__tiled_blas (m, n, b, Q, ldq, tau);
+   if ( method == HH_A2V_RL__TILED_____ ) qr_householder_a2v_rl__tiled_____ (m, n, b, Q, ldq, tau);
+   if ( method == HH_A2V_RL__TILED_BLAS ) qr_householder_a2v_rl__tiled_blas (m, n, b, Q, ldq, tau);
    if ( method == GEQR2 )                 LAPACKE_dgeqr2_work( LAPACK_COL_MAJOR, m, n, Q, ldq, tau, work );
    if ( method == GEQRF )                 LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, n, Q, ldq, tau, work, lwork );
 
