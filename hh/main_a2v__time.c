@@ -6,6 +6,7 @@
 
 #define HH_A2VLL                8
 #define HH_A2VRL                9
+#define HH_A2V_REC_BLAS       110
 #define HH_A2VLL_BLAS         108
 #define HH_A2VRL_BLAS         109
 #define HH_A2VLL__TILED       208
@@ -15,6 +16,7 @@
 #define UNKNOWN               999
 
 extern void qr_householder_a2vrl ( int M, int N, double *A, int lda, double *tau );
+extern void qr_householder_a2v_rec_blas ( int M, int N, double *A, int lda, double *tau );
 extern void qr_householder_a2vrl_blas ( int M, int N, double *A, int lda, double *tau );
 extern void qr_householder_a2vll ( int M, int N, double *A, int lda, double *tau );
 extern void qr_householder_a2vll_blas ( int M, int N, double *A, int lda, double *tau );
@@ -54,6 +56,8 @@ int main(int argc, char ** argv) {
       if( strcmp( *(argv + i), "-method") == 0) {
          if( strcmp( *(argv + i + 1), "hh_a2vrl") == 0)
            method = HH_A2VRL;
+         else if( strcmp( *(argv + i + 1), "hh_a2v_rec_blas") == 0)
+           method = HH_A2V_REC_BLAS;
          else if( strcmp( *(argv + i + 1), "hh_a2vrl_blas") == 0)
            method = HH_A2VRL_BLAS;
          else if( strcmp( *(argv + i + 1), "hh_a2vll") == 0)
@@ -106,6 +110,7 @@ int main(int argc, char ** argv) {
       work = (double *) malloc( n * sizeof(double));
    }
 
+   if ( method == HH_A2V_REC_BLAS )      printf("%%%% [ HH_A2V_REC_BLAS       ] m = %4d; n = %4d;           ",m,n);
    if ( method == HH_A2VRL )             printf("%%%% [ HH_A2VRL              ] m = %4d; n = %4d;           ",m,n);
    if ( method == HH_A2VRL_BLAS )        printf("%%%% [ HH_A2VRL_BLAS         ] m = %4d; n = %4d;           ",m,n);
    if ( method == HH_A2VLL )             printf("%%%% [ HH_A2VLL              ] m = %4d; n = %4d;           ",m,n);
@@ -119,6 +124,7 @@ int main(int argc, char ** argv) {
 
 /*************************************************************/
 
+   if ( method == HH_A2V_REC_BLAS )      qr_householder_a2v_rec_blas (m, n, Q, ldq, tau);
    if ( method == HH_A2VRL )             qr_householder_a2vrl (m, n, Q, ldq, tau);
    if ( method == HH_A2VRL_BLAS )        qr_householder_a2vrl_blas (m, n, Q, ldq, tau);
    if ( method == HH_A2VLL )             qr_householder_a2vll (m, n, Q, ldq, tau);
