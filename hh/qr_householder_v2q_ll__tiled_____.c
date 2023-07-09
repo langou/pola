@@ -1,6 +1,6 @@
 #include <math.h>
 
-void qr_householder_v2qll__tiled ( int M, int N, int B, double *A, int lda, double *tau )
+void qr_householder_v2q_ll__tiled_____ ( int M, int N, int B, double *A, int lda, double *tau )
 {
   int i, j, k, k0;
   double tmp;

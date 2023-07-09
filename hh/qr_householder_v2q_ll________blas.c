@@ -1,7 +1,7 @@
 #include <math.h>
 #include <cblas.h>
 
-void qr_householder_v2qll_blas ( int M, int N, double *A, int lda, double *tau )
+void qr_householder_v2q_ll________blas ( int M, int N, double *A, int lda, double *tau )
 {
    int j, k;
    double tmp;
