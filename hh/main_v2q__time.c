@@ -6,6 +6,7 @@
 
 #define HH_V2QRL                6
 #define HH_V2QLL                7
+#define HH_V2QLL_BLAS         107
 #define HH_V2QLL_TILED        207
 #define ORG2R                 911
 #define ORGQR                 912
@@ -13,6 +14,7 @@
 
 extern void qr_householder_v2qrl ( int M, int N, double *A, int lda, double *tau );
 extern void qr_householder_v2qll ( int M, int N, double *A, int lda, double *tau );
+extern void qr_householder_v2qll_blas ( int M, int N, double *A, int lda, double *tau );
 extern void qr_householder_v2qll__tiled ( int M, int N, int B, double *A, int lda, double *tau );
 
 extern double check_qr_repres( int m, int n, double *A, int lda, double *Q, int ldq, double *R, int ldr );
@@ -52,6 +54,8 @@ int main(int argc, char ** argv) {
            method = HH_V2QRL;
          else if( strcmp( *(argv + i + 1), "hh_v2qll") == 0)
            method = HH_V2QLL;
+         else if( strcmp( *(argv + i + 1), "hh_v2qll_blas") == 0)
+           method = HH_V2QLL_BLAS;
          else if( strcmp( *(argv + i + 1), "hh_v2qll_tiled") == 0)
            method = HH_V2QLL_TILED;
          else if( strcmp( *(argv + i + 1), "org2r") == 0)
@@ -97,6 +101,7 @@ int main(int argc, char ** argv) {
 
    if ( method == HH_V2QRL       )        printf("%%%% [ HH_V2QRL              ] m = %4d; n = %4d;           ",m,n);
    if ( method == HH_V2QLL       )        printf("%%%% [ HH_V2QLL              ] m = %4d; n = %4d;           ",m,n);
+   if ( method == HH_V2QLL_BLAS  )        printf("%%%% [ HH_V2QLL_BLAS         ] m = %4d; n = %4d;           ",m,n);
    if ( method == HH_V2QLL_TILED )        printf("%%%% [ HH_V2QLL_TILED        ] m = %4d; n = %4d; b = %4d;  ",m,n,b);
    if ( method == ORG2R          )        printf("%%%% [ ORG2R                 ] m = %4d; n = %4d;           ",m,n);
    if ( method == ORGQR          )        printf("%%%% [ ORGQR                 ] m = %4d; n = %4d;           ",m,n);
@@ -111,6 +116,7 @@ int main(int argc, char ** argv) {
 /*************************************************************/
    if ( method == HH_V2QRL )             qr_householder_v2qrl (m, n, Q, ldq, tau);
    if ( method == HH_V2QLL )             qr_householder_v2qll (m, n, Q, ldq, tau);
+   if ( method == HH_V2QLL_BLAS )        qr_householder_v2qll_blas (m, n, Q, ldq, tau);
    if ( method == HH_V2QLL_TILED )       qr_householder_v2qll__tiled (m, n, b, Q, ldq, tau);
    if ( method == ORG2R    )             dorg2r_( &m, &n, &n, Q, &ldq, tau, work, &i );
    if ( method == ORGQR    )             LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, m, n, n, Q, ldq, tau, work, lwork );
