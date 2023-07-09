@@ -4,7 +4,7 @@
 
 void qr_householder_a2v_rl__tiled_blas ( int M, int N, int B, double *A, int lda, double *tau )
 {
-  int i, j, k, k0;
+  int j, k, k0;
   double norma2, norma, tmp;
 
 #pragma scop

@@ -12,11 +12,11 @@ for(k = N-1; k > -1; k--){
 
       tau[j] = 0.e+00;
 
-         for(i = k+1; i < M; i++){
+      for(i = k+1; i < M; i++){
 
-            tau[j] += A[i+lda*k] * A[i+lda*j];
+         tau[j] += A[i+lda*k] * A[i+lda*j];
 
-         }
+      }
 
    }
 
