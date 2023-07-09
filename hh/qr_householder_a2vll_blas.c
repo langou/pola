@@ -17,7 +17,7 @@ for(k = 0; k < N; k++){
       cblas_daxpy( (M-j-1), -tmp, &(A[(j+1)+j*lda]), 1, &(A[(j+1)+k*lda]), 1 );
    }
 
-   norma2 = cblas_ddot( (M-j-1), &(A[(j+1)+j*lda]), 1, &(A[(j+1)+k*lda]), 1 );
+   norma2 = cblas_ddot( (M-k-1), &(A[(k+1)+k*lda]), 1, &(A[(k+1)+k*lda]), 1 );
    norma = sqrt( A[k+lda*k] * A[k+lda*k] + norma2 );
    
    A[k+lda*k] = ( A[k+lda*k] > 0 ) ? ( A[k+lda*k] + norma ) : ( A[k+lda*k] - norma ) ;
