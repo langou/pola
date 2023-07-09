@@ -99,7 +99,6 @@ int main(int argc, char ** argv) {
       work = (double *) malloc( n * sizeof(double));
    }
 
-
    if ( method == HH_A2VLL )             printf("%%%% [ HH_A2VLL              ] m = %4d; n = %4d;           ",m,n);
    if ( method == HH_A2VLL_BLAS )        printf("%%%% [ HH_A2VLL_BLAS         ] m = %4d; n = %4d;           ",m,n);
    if ( method == HH_A2VLL__TILED )      printf("%%%% [ HH_A2VLL__TILED       ] m = %4d; n = %4d; b = %4d; ",m,n,b);
@@ -120,7 +119,7 @@ int main(int argc, char ** argv) {
 
 /*************************************************************/
 
-   for(i = 0; i < n; i++) for(j = i; j < n; j++) R[i+j*ldr] = Q[i+j*ldq];;
+   for(i = 0; i < n; i++) for(j = i; j < n; j++) R[i+j*ldr] = Q[i+j*ldq];
 
    LAPACKE_dorgqr( LAPACK_COL_MAJOR, m, n, n, Q, ldq, tau );
 

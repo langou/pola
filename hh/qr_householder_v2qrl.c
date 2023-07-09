@@ -1,6 +1,6 @@
 #include <math.h>
 
-void qr_householder_v2q ( int M, int N, double *A, int lda, double *tau )
+void qr_householder_v2qrl ( int M, int N, double *A, int lda, double *tau )
 {
   int i, j, k;
 
@@ -26,8 +26,6 @@ for(k = N-1; k > -1; k--){
 
    }
 
-   A[k+lda*k] = 1.0e+00 - tau[k];
-
    for(j = k+1; j < N; j++){
 
       A[k+lda*j] = -tau[j];
@@ -42,10 +40,11 @@ for(k = N-1; k > -1; k--){
       }
    }
    
+   A[k+lda*k] = 1.0e+00 - tau[k];
+
    for(i = k+1; i < M; i++){
       A[i+lda*k] = - A[i+lda*k] * tau[k];
    }
-
 
 }
 #pragma endscop
