@@ -3,6 +3,8 @@
 #include <string.h>
 #include <math.h>
 #include "lapacke.h"
+#include <time.h>
+#include <papi/timing.h>
 
 #define HH_A2V_LL____________   8
 #define HH_A2V_RL____________   9
@@ -35,6 +37,8 @@ extern double check_orthog_blas( int m, int n, double *Q, int ldq );
 int main(int argc, char ** argv) {
 
    int b, i, j, lwork, m, n;
+   int human_readable;
+   int use_papi;
    int lda, ldq, ldr;
    int method;
    double *A, *Q, *R, *tau, *work;
@@ -42,6 +46,8 @@ int main(int argc, char ** argv) {
    m = 10;
    n = 8;
    b = 3;
+   human_readable = 0;
+   use_papi = 1;
    method = HH_A2V_LL____________ ;
 
    for(i = 1; i < argc; i++){
@@ -56,6 +62,12 @@ int main(int argc, char ** argv) {
       if( strcmp( *(argv + i), "-b") == 0) {
          b = atoi( *(argv + i + 1) );
          i++;
+      }
+      if( strcmp( *(argv + i), "-h") == 0) {
+	human_readable = 1;
+      }
+      if( strcmp( *(argv + i), "-np") == 0) {
+	use_papi = 0;
       }
      if( strcmp( *(argv + i), "-method") == 0) {
          if( strcmp( *(argv + i + 1), "hh_a2v_rl") == 0)
@@ -90,6 +102,20 @@ int main(int argc, char ** argv) {
 
    if ( method == UNKNOWN ) { printf("method is UNKNOWN -- quick return.\n"); return -1; }
 
+   // Initializing PAPI and preparing the data structure for the result
+   papi_info_t papi_info;
+   
+   // To store the results of the counter
+   size_t num_events = 0;
+
+   if(use_papi) {
+     init_papi();
+     papi_info = build_papi_info();
+     num_events = papi_info.num_events;
+   }
+
+   long long results [num_events];
+
    lda = m; 
    ldq = m;
    ldr = n;
@@ -118,21 +144,40 @@ int main(int argc, char ** argv) {
       work = (double *) malloc( n * sizeof(double));
    }
 
-   if ( method == HH_A2V_REC_______BLAS ) printf("%%%% [ HH_A2V_REC_______BLAS ] m = %4d; n = %4d;           ",m,n);
-   if ( method == HH_A2V_RL____________ ) printf("%%%% [ HH_A2V_RL____________ ] m = %4d; n = %4d;           ",m,n);
-   if ( method == HH_A2V_RL________BLAS ) printf("%%%% [ HH_A2V_RL________BLAS ] m = %4d; n = %4d;           ",m,n);
-   if ( method == HH_A2V_LL____________ ) printf("%%%% [ HH_A2V_LL____________ ] m = %4d; n = %4d;           ",m,n);
-   if ( method == HH_A2V_LL________BLAS ) printf("%%%% [ HH_A2V_LL________BLAS ] m = %4d; n = %4d;           ",m,n);
-   if ( method == HH_A2V_LL__TILED_____ ) printf("%%%% [ HH_A2V_LL__TILED_____ ] m = %4d; n = %4d; b = %4d; ",m,n,b);
-   if ( method == HH_A2V_LL__TILED_BLAS ) printf("%%%% [ HH_A2V_LL__TILED_BLAS ] m = %4d; n = %4d; b = %4d; ",m,n,b);
-   if ( method == HH_A2V_RL__TILED_____ ) printf("%%%% [ HH_A2V_RL__TILED_____ ] m = %4d; n = %4d; b = %4d; ",m,n,b);
-   if ( method == HH_A2V_RL__TILED_BLAS ) printf("%%%% [ HH_A2V_RL__TILED_BLAS ] m = %4d; n = %4d; b = %4d; ",m,n,b);
-   if ( method == GEQR2         )         printf("%%%% [ GEQR2                 ] m = %4d; n = %4d;           ",m,n);
-   if ( method == GEQRF         )         printf("%%%% [ GEQRF                 ] m = %4d; n = %4d;           ",m,n);
+   if (human_readable) {
+     if ( method == HH_A2V_REC_______BLAS ) printf("%%%% [ HH_A2V_REC_______BLAS ] m = %4d; n = %4d;           ",m,n);
+     if ( method == HH_A2V_RL____________ ) printf("%%%% [ HH_A2V_RL____________ ] m = %4d; n = %4d;           ",m,n);
+     if ( method == HH_A2V_RL________BLAS ) printf("%%%% [ HH_A2V_RL________BLAS ] m = %4d; n = %4d;           ",m,n);
+     if ( method == HH_A2V_LL____________ ) printf("%%%% [ HH_A2V_LL____________ ] m = %4d; n = %4d;           ",m,n);
+     if ( method == HH_A2V_LL________BLAS ) printf("%%%% [ HH_A2V_LL________BLAS ] m = %4d; n = %4d;           ",m,n);
+     if ( method == HH_A2V_LL__TILED_____ ) printf("%%%% [ HH_A2V_LL__TILED_____ ] m = %4d; n = %4d; b = %4d; ",m,n,b);
+     if ( method == HH_A2V_LL__TILED_BLAS ) printf("%%%% [ HH_A2V_LL__TILED_BLAS ] m = %4d; n = %4d; b = %4d; ",m,n,b);
+     if ( method == HH_A2V_RL__TILED_____ ) printf("%%%% [ HH_A2V_RL__TILED_____ ] m = %4d; n = %4d; b = %4d; ",m,n,b);
+     if ( method == HH_A2V_RL__TILED_BLAS ) printf("%%%% [ HH_A2V_RL__TILED_BLAS ] m = %4d; n = %4d; b = %4d; ",m,n,b);
+     if ( method == GEQR2         )         printf("%%%% [ GEQR2                 ] m = %4d; n = %4d;           ",m,n);
+     if ( method == GEQRF         )         printf("%%%% [ GEQRF                 ] m = %4d; n = %4d;           ",m,n);
+   } else {
+     if ( method == HH_A2V_REC_______BLAS ) printf("HH_A2V_REC_BLAS       %4d %4d N/A ",m,n);
+     if ( method == HH_A2V_RL____________ ) printf("HH_A2V_RL             %4d %4d N/A ",m,n);
+     if ( method == HH_A2V_RL________BLAS ) printf("HH_A2V_RL_BLAS        %4d %4d N/A ",m,n);
+     if ( method == HH_A2V_LL____________ ) printf("HH_A2V_LL             %4d %4d N/A ",m,n);
+     if ( method == HH_A2V_LL________BLAS ) printf("HH_A2V_LL_BLAS        %4d %4d N/A ",m,n);
+     if ( method == HH_A2V_LL__TILED_____ ) printf("HH_A2V_LL_TILED       %4d %4d %4d ",m,n,b);
+     if ( method == HH_A2V_LL__TILED_BLAS ) printf("HH_A2V_LL_TILED_BLAS  %4d %4d %4d ",m,n,b);
+     if ( method == HH_A2V_RL__TILED_____ ) printf("HH_A2V_RL_TILED       %4d %4d %4d ",m,n,b);
+     if ( method == HH_A2V_RL__TILED_BLAS ) printf("HH_A2V_RL_TILED_BLAS  %4d %4d %4d ",m,n,b);
+     if ( method == GEQR2         )         printf("GEQR2                 %4d %4d N/A ",m,n);
+     if ( method == GEQRF         )         printf("GEQRF                 %4d %4d N/A ",m,n);
+   }
 
    for(i = 0; i < m; i++) for(j = 0; j < n; j++) Q[i+j*ldq] = A[i+j*lda];
 
 /*************************************************************/
+
+   struct timespec start, end;
+   clock_gettime(CLOCK_MONOTONIC, &start);
+   if (use_papi)
+     record_events(papi_info);
 
    if ( method == HH_A2V_REC_______BLAS ) qr_householder_a2v_rec_______blas (m, n, Q, ldq, tau);
    if ( method == HH_A2V_RL____________ ) qr_householder_a2v_rl____________ (m, n, Q, ldq, tau);
@@ -146,6 +191,10 @@ int main(int argc, char ** argv) {
    if ( method == GEQR2 )                 LAPACKE_dgeqr2_work( LAPACK_COL_MAJOR, m, n, Q, ldq, tau, work );
    if ( method == GEQRF )                 LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, n, Q, ldq, tau, work, lwork );
 
+   if (use_papi)
+     retrieve_results(papi_info, results);
+   clock_gettime(CLOCK_MONOTONIC, &end);
+
 /*************************************************************/
 
    for(i = 0; i < n; i++) for(j = i; j < n; j++) R[i+j*ldr] = Q[i+j*ldq];
@@ -157,9 +206,33 @@ int main(int argc, char ** argv) {
 
    free(tau);
 
-   printf("repres = %8.1e; ", check_qr_repres_blas( m, n, A, lda, Q, ldq, R, ldr ));
+   double cycles, l1miss, l2miss = 0;
+   if (use_papi) {
+     cycles = (double) results[CYCLES];
+     l1miss = results[CACHE_MISS_L1];
+     l2miss = results[CACHE_MISS_L2];
+   }
 
-   printf("orth = %8.1e;\n", check_orthog_blas( m, n, Q, ldq ));
+   double time_taken;
+   time_taken = end.tv_sec - start.tv_sec;
+   time_taken = time_taken + (end.tv_nsec - start.tv_nsec) * 1e-9;
+
+   if (human_readable) {
+     printf("repres = %8.1e; ", check_qr_repres_blas( m, n, A, lda, Q, ldq, R, ldr ));
+
+     printf("orth = %8.1e;", check_orthog_blas( m, n, Q, ldq ));
+     printf("time = %.5g; ", time_taken);
+     if (use_papi) 
+       printf("cycles = %.5g; L1 miss = %.5g; L2 miss = %.5g ", cycles, l1miss, l2miss);
+   } else {
+     printf(" %.5g ", time_taken);
+     if (use_papi) 
+       printf(" %.5g %.5g %.5g ", cycles, l1miss, l2miss);
+     else 
+       printf(" N/A N/A N/A ");
+   }
+
+   printf("\n");
 
    free( R );
    free( Q );
