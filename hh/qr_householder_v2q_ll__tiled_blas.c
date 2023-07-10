@@ -16,7 +16,7 @@ for(k0 = N-1; k0 > -1; k0-=B){
 
       cblas_dscal( (M-k-1), -tau[k], &(A[(k+1)+k*lda]), 1 );
 
-      for(j = k-1; j > k0-B; j--){
+      for(j = k-1; ((j > k0-B)&&(j > -1)); j--){
 
          tmp = cblas_ddot( (M-j-1), &(A[(j+1)+j*lda]), 1, &(A[(j+1)+k*lda]), 1 );
 
