@@ -131,7 +131,7 @@ int main(int argc, char ** argv) {
       for(j = 0; j < n; j++)
          A[i+j*lda] = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
 
-   tau = (double *) malloc(sizeof(double[n]));
+   tau = (double *) malloc( lda * n * sizeof(double));
 
    if ( method == ORGQR ){
       lwork = -1;
