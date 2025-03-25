@@ -1,5 +1,5 @@
 #include <math.h>
-#include <cblas.h>
+#include <mkl_cblas.h>
 
 // qr_mgs_ll
 // this is the left-looking variant of MGS
